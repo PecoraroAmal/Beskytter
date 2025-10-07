@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function downloadEsempio() {
     try {
-        const response = await fetch('../data/test.json');
+        const response = await fetch('test.json');
         if (!response.ok) throw new Error('Errore nel caricamento del file di esempio');
         
         const contenuto = await response.text();
