@@ -1,0 +1,142 @@
+{
+  "passwords": [
+    {
+      "piattaforma": "Amazon",
+      "username": "user@email.com",
+      "password": "Amz_2023_Shop!",
+      "nota": "Account principale Amazon",
+      "url": "https://amazon.it",
+      "categoria": "Shopping"
+    },
+    {
+      "piattaforma": "Apple ID",
+      "username": "apple.user@icloud.com",
+      "password": "Apple2023_ID!",
+      "nota": "Account Apple principale",
+      "url": "https://appleid.apple.com",
+      "categoria": "Tech"
+    },
+    {
+      "piattaforma": "Netflix",
+      "username": "netflix.user@email.com",
+      "password": "Netflix_2023!",
+      "nota": "Account Netflix family",
+      "url": "https://netflix.com",
+      "categoria": "Streaming"
+    },
+    {
+      "piattaforma": "Disney+",
+      "username": "disney.plus@email.com",
+      "password": "Disney2023Plus!",
+      "nota": "Account Disney+ condiviso",
+      "url": "https://disneyplus.com",
+      "categoria": "Streaming"
+    },
+    {
+      "piattaforma": "Gmail",
+      "username": "user.gmail@gmail.com",
+      "password": "Gmail2023_Secure!",
+      "nota": "Email principale personale", 
+      "url": "https://gmail.com",     
+      "categoria": "Email"
+    },
+    {
+      "piattaforma": "Gmail Lavoro",
+      "username": "work@company.com",
+      "password": "Work2023_Gmail!",
+      "nota": "Email aziendale",
+      "url": "https://gmail.com",
+      "categoria": "Lavoro"
+    },
+    {
+      "piattaforma": "Microsoft 365",
+      "username": "user@outlook.com",
+      "password": "MS365_2023!",
+      "nota": "Account Microsoft aziendale",
+      "url": "https://office.com",
+      "categoria": "Lavoro"
+    },
+    {
+      "piattaforma": "Spotify",
+      "username": "spotify.user",
+      "password": "Spotify2023!",
+      "nota": "Account Spotify Premium",
+      "url": "https://spotify.com",
+      "categoria": "Streaming"
+    },
+    {
+      "piattaforma": "PayPal",
+      "username": "user@email.com",
+      "password": "PayPal2023_Secure!",
+      "nota": "Account PayPal principale",
+      "url": "https://paypal.com",
+      "categoria": "Finanza"
+    },
+    {
+      "piattaforma": "LinkedIn",
+      "username": "professional.user@email.com",
+      "password": "LinkedIn2023!",
+      "nota": "Profilo professionale",
+      "url": "https://linkedin.com",
+      "categoria": "Lavoro"
+    }
+  ],
+  "cards": [
+    {
+      "ente": "Banca XYZ",
+      "pan": "1234567890123456",
+      "dataScadenza": "12/25",
+      "cvv": "123",
+      "pin": "1234",
+      "nota": "Carta principale",
+      "circuito": "Visa"
+    },
+    {
+      "ente": "Banca ABC",
+      "pan": "9876543210987654",
+      "dataScadenza": "06/26",
+      "cvv": "456",
+      "pin": "5678",
+      "nota": "Carta secondaria",
+      "circuito": "MasterCard"
+    }
+  ],
+  "wallets": [
+    {
+      "wallet": "MetaMask",
+      "utente": "crypto_user",
+      "password": "MetaMask2023!",
+      "key": "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3",
+      "indirizzo": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+      "nota": "Wallet principale ETH",
+      "tipologia": "Crypto"
+    },
+    {
+      "wallet": "Apple Wallet",
+      "utente": "apple.user@icloud.com",
+      "password": "AppleWallet2023!",
+      "key": "",
+      "indirizzo": "",
+      "nota": "Apple Pay e carte",
+      "tipologia": "Carte"
+    },
+    {
+      "wallet": "Samsung Pay",
+      "utente": "samsung.user@email.com",
+      "password": "SamsungPay2023!",
+      "key": "",
+      "indirizzo": "",
+      "nota": "Samsung Pay e carte associate",
+      "tipologia": "Carte"
+    },
+    {
+      "wallet": "Google Pay",
+      "utente": "user.gmail@gmail.com",
+      "password": "GooglePay2023!",
+      "key": "",
+      "indirizzo": "",
+      "nota": "Google Pay e carte digitali",     
+      "tipologia": "Carte"
+    }
+  ]
+}

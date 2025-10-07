@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beskytter - Modifica</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+             <div class="nav-logo">
+                <i class="fas fa-lock"></i>
+                Beskytter
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="edit.html" class="nav-link active">Modifica</a>
+                <a href="info.html" class="nav-link">Info</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="upload-section">
+                <h2>Carica il tuo file</h2>
+                <div class="form-card">
+                    <div class="upload-zone" id="uploadZone">
+                        <input type="file" id="fileInput" accept=".json">
+                        <p>Trascina qui il tuo file JSON o clicca per selezionarlo</p>
+                        <p class="file-name"></p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="decryptPassword">Password di decrittazione</label>
+                            <input type="password" id="decryptPassword" class="input-field" placeholder="Inserisci la password">
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="decryptBtn">
+                            <i class="fas fa-unlock"></i> Apri File
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="edit-section">
+                <h2>Password</h2>
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="passwordSearchInput">Cerca password</label>
+                            <input type="text" id="passwordSearchInput" class="search-input" placeholder="Cerca per piattaforma, username...">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryFilter">Filtra per categoria</label>
+                            <select id="categoryFilter" class="select-field">
+                                <option value="">Tutte le categorie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="passwordContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-lock"></i>
+                            <p>Nessuna password salvata</p>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="addPasswordBtn">
+                            <i class="fas fa-plus"></i> Aggiungi Password
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="edit-section">
+                <h2>Carte</h2>
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardSearchInput">Cerca carte</label>
+                            <input type="text" id="cardSearchInput" class="search-input" placeholder="Cerca per ente, PAN...">
+                        </div>
+                        <div class="form-group">
+                            <label for="circuitFilter">Filtra per circuito</label>
+                            <select id="circuitFilter" class="select-field">
+                                <option value="">Tutti i circuiti</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="cardContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-credit-card"></i>
+                            <p>Nessuna carta salvata</p>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="addCardBtn">
+                            <i class="fas fa-plus"></i> Aggiungi Carta
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="edit-section">
+                <h2>Wallet</h2>
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="walletSearchInput">Cerca wallet</label>
+                            <input type="text" id="walletSearchInput" class="search-input" placeholder="Cerca per wallet, indirizzo...">
+                        </div>
+                        <div class="form-group">
+                            <label for="typeFilter">Filtra per tipologia</label>
+                            <select id="typeFilter" class="select-field">
+                                <option value="">Tutte le tipologie</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="walletContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-wallet"></i>
+                            <p>Nessun wallet salvato</p>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="addWalletBtn">
+                            <i class="fas fa-plus"></i> Aggiungi Wallet
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="download-section">
+                <h2>Salva File</h2>
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="encryptPassword">Password di crittografia</label>
+                            <input type="password" id="encryptPassword" class="input-field" placeholder="Inserisci una password (min 8 caratteri)">
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="downloadPlainBtn">
+                            <i class="fas fa-download"></i> Scarica non criptato
+                        </button>
+                        <button class="btn btn-primary" id="downloadEncryptedBtn">
+                            <i class="fas fa-lock"></i> Scarica criptato
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Modale per la modifica -->
+            <div class="modal" id="editModal">
+                <div class="modal-content">
+                    <h3>Modifica Elemento</h3>
+                    <div id="editFormContainer"></div>
+                    <div class="btn-container">
+                        <button class="btn btn-primary" id="saveEditBtn">
+                            <i class="fas fa-save"></i> Salva
+                        </button>
+                        <button class="btn btn-secondary" id="cancelEditBtn">
+                            <i class="fas fa-times"></i> Annulla
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Beskytter - Privacy First</p>
+            <p>Questo sito non memorizza né trasmette alcun dato personale. Tutti i dati caricati restano esclusivamente nel browser dell’utente e vengono eliminati alla chiusura della pagina.</p>
+
+            <!-- Bottone donazioni PayPal -->
+            <p>
+                <a href="https://paypal.me/AmalPecoraro?locale.x=it_IT&country.x=IT" target="_blank" class="donation-button">
+                    Supporta il progetto
+                </a>
+            </p>
+            <p class="donation-note">
+                La donazione è <strong>completamente volontaria</strong> e <strong>non garantisce accesso a funzionalità aggiuntive</strong>. Serve esclusivamente a supportare il progetto.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/crypto.js"></script>
+    <script src="js/edit.js"></script>
+</body>
+</html>
