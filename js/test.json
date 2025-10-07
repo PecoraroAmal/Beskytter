@@ -17,68 +17,12 @@
       "categoria": "Tech"
     },
     {
-      "piattaforma": "Netflix",
-      "username": "netflix.user@email.com",
-      "password": "Netflix_2023!",
-      "nota": "Account Netflix family",
-      "url": "https://netflix.com",
-      "categoria": "Streaming"
-    },
-    {
-      "piattaforma": "Disney+",
-      "username": "disney.plus@email.com",
-      "password": "Disney2023Plus!",
-      "nota": "Account Disney+ condiviso",
-      "url": "https://disneyplus.com",
-      "categoria": "Streaming"
-    },
-    {
-      "piattaforma": "Gmail",
-      "username": "user.gmail@gmail.com",
-      "password": "Gmail2023_Secure!",
-      "nota": "Email principale personale", 
-      "url": "https://gmail.com",     
-      "categoria": "Email"
-    },
-    {
-      "piattaforma": "Gmail Lavoro",
-      "username": "work@company.com",
-      "password": "Work2023_Gmail!",
-      "nota": "Email aziendale",
-      "url": "https://gmail.com",
-      "categoria": "Lavoro"
-    },
-    {
-      "piattaforma": "Microsoft 365",
-      "username": "user@outlook.com",
-      "password": "MS365_2023!",
-      "nota": "Account Microsoft aziendale",
-      "url": "https://office.com",
-      "categoria": "Lavoro"
-    },
-    {
-      "piattaforma": "Spotify",
-      "username": "spotify.user",
-      "password": "Spotify2023!",
-      "nota": "Account Spotify Premium",
-      "url": "https://spotify.com",
-      "categoria": "Streaming"
-    },
-    {
-      "piattaforma": "PayPal",
-      "username": "user@email.com",
-      "password": "PayPal2023_Secure!",
-      "nota": "Account PayPal principale",
-      "url": "https://paypal.com",
-      "categoria": "Finanza"
-    },
-    {
-      "piattaforma": "LinkedIn",
-      "username": "professional.user@email.com",
-      "password": "LinkedIn2023!",
-      "nota": "Profilo professionale",
-      "url": "https://linkedin.com",
-      "categoria": "Lavoro"
+      "piattaforma": "iPhone",
+      "username": "",
+      "password": "123456",
+      "nota": "Codice sblocco iPhone",
+      "url": "",
+      "categoria": "Dispositivi"
     }
   ],
   "cards": [
