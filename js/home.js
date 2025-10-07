@@ -95,7 +95,7 @@ function gestisciCaricamentoFile(event) {
 // Apre il file caricato, con eventuale decrittazione
 async function apriFile() {
     if (!fileCaricato) {
-        mostraMessaggio('Seleziona prima un file JSON', 'errore');
+        mostraMessaggio('Seleziona prima un file JSON valido', 'errore');
         return;
     }
 

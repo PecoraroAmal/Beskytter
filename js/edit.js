@@ -1,5 +1,5 @@
 // Variabili globali
-let datiCaricati = null;
+let datiCaricati = {"passwords":[],"cards":[],"wallets":[]};
 let fileCaricato = null;
 let fileCaricatoNome = null;
 
@@ -139,7 +139,7 @@ function gestisciCaricamentoFile(event) {
 // Apertura file
 async function apriFile() {
     if (!fileCaricato) {
-        mostraMessaggio('Seleziona prima un file JSON', 'errore');
+        mostraMessaggio('Seleziona prima un file JSON valido', 'errore');
         return;
     }
     
