@@ -473,6 +473,25 @@ h2 {
     margin-bottom: 0;
 }
 
+.workflow-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.workflow-option {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow);
+}
+
+.workflow-option h3 {
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+}
+
 .workflow-list {
     counter-reset: workflow;
     list-style: none;
@@ -945,6 +964,10 @@ h2 {
     .feature-card {
         grid-template-columns: 1fr;
         gap: var(--spacing-lg);
+    }
+
+    .workflow-container {
+        grid-template-columns: 1fr;
     }
 
     .workflow-item {

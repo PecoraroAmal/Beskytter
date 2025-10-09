@@ -11,8 +11,6 @@
     <link rel="icon" sizes="192x192" href="assets/android-icon.png">
     <link rel="icon" sizes="32x32" href="assets/favicon-32x32.png">
     <link rel="icon" sizes="16x16" href="assets/favicon-16x16.png">
-    
-    <!-- Favicon per Web Manifest (opzionale) -->
     <link rel="manifest" href="assets/manifest.json">
 </head>
 <body>
@@ -71,7 +69,7 @@
                         <div class="encryption-details">
                             <div>
                                 <h4>Specifiche Tecniche</h4>
-                                <ul class="encryption-features"></ul>
+                                <ul class="encryption-features">
                                     <li>Algoritmo: AES-256 in modalità GCM</li>
                                     <li>Derivazione chiave: PBKDF2 (100.000 iterazioni)</li>
                                     <li>Salt casuale per ogni cifratura</li>
@@ -98,6 +96,14 @@
                                     <li>Conserva sempre una copia di backup non criptata in un luogo sicuro</li>
                                     <li>Considera di stampare una copia cartacea come backup di emergenza</li>
                                 </ul>
+                            </div>
+                        </div>
+
+                        <div class="warning-note">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4>Attenzione: Non Usare su Reti Pubbliche</h4>
+                                <p>Non utilizzare Beskytter quando sei collegato a una rete pubblica (es. Wi-Fi di caffè, aeroporti, ecc.). Un hacker nelle vicinanze potrebbe intercettare i dati non criptati durante l'inserimento o la modifica delle password, compromettendo la tua sicurezza.</p>
                             </div>
                         </div>
                     </div>
@@ -151,41 +157,77 @@
             <section class="info-section">
                 <h2>Come Usare il Beskytter</h2>
                 <div class="info-card">
-                    <ol class="workflow-list">
-                        <li class="workflow-item">
-                            <span class="workflow-step">1</span>
-                            <div>
-                                <h4>Inizia con un File di Esempio</h4>
-                                <p>Scarica il file di esempio qui sotto per vedere la struttura dei dati</p>
-                            </div>
-                        </li>
-                        <li class="workflow-item">
-                            <span class="workflow-step">2</span>
-                            <div>
-                                <h4>Personalizza le tue Credenziali</h4>
-                                <p>Vai in "Modifica", carica il file e aggiungi le tue password</p>
-                            </div>
-                        </li>
-                        <li class="workflow-item">
-                            <span class="workflow-step">3</span>
-                            <div>
-                                <h4>Salva in Modo Sicuro</h4>
-                                <p>Scarica il file finale scegliendo tra:
-                                <ul>
-                                    <li>Non criptato: per modifiche future facili</li>
-                                    <li>Criptato: per salvare ovunque in sicurezza</li>
-                                </ul>
-                                </p>
-                            </div>
-                        </li>
-                        <li class="workflow-item">
-                            <span class="workflow-step">4</span>
-                            <div>
-                                <h4>Accedi alle tue Password</h4>
-                                <p>Dalla Home, carica il file e inserisci la password master se necessario</p>
-                            </div>
-                        </li>
-                    </ol>
+                    <div class="workflow-container">
+                        <div class="workflow-option">
+                            <h3>Opzione 1: Usa un File di Esempio</h3>
+                            <ol class="workflow-list">
+                                <li class="workflow-item">
+                                    <span class="workflow-step">1</span>
+                                    <div>
+                                        <h4>Inizia con un File di Esempio</h4>
+                                        <p>Scarica il file di esempio qui sotto per vedere la struttura dei dati</p>
+                                    </div>
+                                </li>
+                                <li class="workflow-item">
+                                    <span class="workflow-step">2</span>
+                                    <div>
+                                        <h4>Personalizza le tue Credenziali</h4>
+                                        <p>Vai in "Modifica", carica il file e aggiungi le tue password</p>
+                                    </div>
+                                </li>
+                                <li class="workflow-item">
+                                    <span class="workflow-step">3</span>
+                                    <div>
+                                        <h4>Salva in Modo Sicuro</h4>
+                                        <p>Scarica il file finale scegliendo tra:
+                                        <ul>
+                                            <li>Non criptato: per modifiche future facili</li>
+                                            <li>Criptato: per salvare ovunque in sicurezza</li>
+                                        </ul>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="workflow-item">
+                                    <span class="workflow-step">4</span>
+                                    <div>
+                                        <h4>Accedi alle tue Password</h4>
+                                        <p>Dalla Home, carica il file e inserisci la password master se necessario</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="workflow-option">
+                            <h3>Opzione 2: Crea da Zero</h3>
+                            <ol class="workflow-list">
+                                <li class="workflow-item">
+                                    <span class="workflow-step">1</span>
+                                    <div>
+                                        <h4>Inizia ad Aggiungere Password</h4>
+                                        <p>Vai nella sezione "Modifica" e incomincia ad aggiungere le tue password</p>
+                                    </div>
+                                </li>
+                                <li class="workflow-item">
+                                    <span class="workflow-step">2</span>
+                                    <div>
+                                        <h4>Salva in Modo Sicuro</h4>
+                                        <p>Scarica il file finale scegliendo tra:
+                                        <ul>
+                                            <li>Non criptato: per modifiche future facili</li>
+                                            <li>Criptato: per salvare ovunque in sicurezza</li>
+                                        </ul>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="workflow-item">
+                                    <span class="workflow-step">3</span>
+                                    <div>
+                                        <h4>Accedi alle tue Password</h4>
+                                        <p>Dalla Home, carica il file e inserisci la password master se necessario</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
 
                     <div class="download-section">
                         <h3>File di Esempio</h3>
@@ -198,43 +240,35 @@
 
                     <div class="faq-section">
                         <h3><i class="fas fa-question-circle"></i> Domande Frequenti</h3>
-                        
                         <div class="faq-grid">
                             <div class="faq-item">
                                 <h4><i class="fas fa-edit"></i> Come modifico le credenziali?</h4>
                                 <p>Nella pagina "Modifica", basta cliccare sulla credenziale che vuoi aggiornare. Ogni campo diventerà modificabile con un semplice click.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-shield-alt"></i> Se qualcuno trova il mio file criptato?</h4>
                                 <p>Il file è protetto da una doppia barriera: serve conoscere la password principale <strong>E</strong> il metodo di decrittazione corretto. Senza entrambi, il file è solo una sequenza di caratteri incomprensibili.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-file-alt"></i> A cosa serve il file non criptato?</h4>
                                 <p>È il tuo "salvagente" in caso di emergenza: se dimentichi la password principale o perdi il file criptato, potrai ricreare tutto partendo dal file JSON non criptato. Caricalo in "Modifica" e usa "Scarica criptato" per proteggere nuovamente i tuoi dati.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-server"></i> Perché non salvate i file in memoria?</h4>
                                 <p>La sicurezza viene prima di tutto. Memorizzare i file li renderebbe vulnerabili agli attacchi informatici. Il tuo file rimane al sicuro solo sul tuo dispositivo.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-sync"></i> Perché devo ricaricare il file in ogni pagina?</h4>
                                 <p>È una misura di sicurezza, manteniamo i dati sensibili in memoria solo per il tempo strettamente necessario.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-eye-slash"></i> Perché i dati sensibili sono nascosti in modifica?</h4>
                                 <p>La protezione dei tuoi dati è importante anche durante la modifica. Mostrare tutto contemporaneamente aumenterebbe il rischio di esposizione accidentale.</p>
                             </div>
-
                             <div class="faq-item">
                                 <h4><i class="fas fa-shield-alt"></i> Perché si chiama "Beskytter" e cosa c'entra un nano come icona?</h4>
                                 <p>Il nome "Beskytter" deriva dalle lingue scandinave (Danese e Norvegese) e significa "protettore" o "guardiano", un richiamo al ruolo di difensore delle tue informazioni sensibili. E per quanto riguarda il nano? Nella mitologia nordica, i nani sono spesso raffigurati come guardiani e protettori di tesori e segreti, proprio come questa web app protegge le tue password.</p>
                             </div>
-
                             <div class="faq-item highlight">
                                 <h4><i class="fas fa-star"></i> Cosa c'è di diverso dagli altri gestori?</h4>
                                 <ul class="feature-comparison">
@@ -242,7 +276,6 @@
                                     <li><i class="fas fa-gift"></i> Completamente Gratuito</li>
                                 </ul>
                             </div>
-
                             <div class="faq-item highlight">
                                 <h4><i class="fas fa-rocket"></i> Sviluppi Futuri</h4>
                                 <ul class="future-features">
@@ -258,12 +291,11 @@
             </section>
         </div>
     </main>
-    <!-- Footer -->
+
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Beskytter - Privacy First</p>
             <p>Questo sito non memorizza né trasmette alcun dato personale. Tutti i dati caricati restano esclusivamente nel browser dell’utente e vengono eliminati alla chiusura della pagina.</p>
-            <!-- Bottone donazioni PayPal -->
             <p>
                 <a href="https://www.paypal.com/donate/?hosted_button_id=5Z5N9EBJERXC6" target="_blank" class="donation-button">
                     Supporta il progetto
@@ -272,7 +304,6 @@
             <p class="donation-note">
                 La donazione è <strong>completamente volontaria</strong> e <strong>non garantisce accesso a funzionalità aggiuntive</strong>. Serve esclusivamente a supportare il progetto.
             </p>
-            <!-- Link GitHub -->
             <p>
                 <a href="https://github.com/PecoraroAmal/Beskytter" target="_blank" class="btn btn-primary">
                     Visualizza il progetto su GitHub
