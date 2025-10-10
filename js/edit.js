@@ -1,7 +1,14 @@
 // Variabili globali
-let datiCaricati = {"passwords":[],"cards":[],"wallets":[]};
+let datiCaricati = { "passwords": [], "cards": [], "wallets": [] };
 let fileCaricato = null;
 let fileCaricatoNome = null;
+
+// Funzione per generare un ID univoco
+function generaIdUnivoco() {
+    return 'xxxx-xxxx-xxxx-xxxx'.replace(/[x]/g, () => {
+        return (Math.random() * 16 | 0).toString(16);
+    });
+}
 
 // Inizializzazione al caricamento della pagina
 document.addEventListener('DOMContentLoaded', () => {
@@ -56,12 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addPasswordBtn) {
         addPasswordBtn.addEventListener('click', aggiungiPassword);
     }
-
     const addCardBtn = document.getElementById('addCardBtn');
     if (addCardBtn) {
         addCardBtn.addEventListener('click', aggiungiCarta);
     }
-
     const addWalletBtn = document.getElementById('addWalletBtn');
     if (addWalletBtn) {
         addWalletBtn.addEventListener('click', aggiungiWallet);
@@ -81,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = e.dataTransfer.files[0];
             if (file) gestisciCaricamentoFile({ target: { files: [file] } });
         });
-        // Aggiungi evento click per aprire l'esplora file
         uploadZone.addEventListener('click', () => {
             const fileInput = document.getElementById('fileInput');
             if (fileInput) {
@@ -162,6 +166,17 @@ async function apriFile() {
         
         if (!validaStrutturaJSON(dati)) throw new Error('Struttura JSON non valida');
         
+        // Aggiungi ID univoci se non presenti
+        dati.passwords.forEach(pwd => {
+            if (!pwd.id) pwd.id = generaIdUnivoco();
+        });
+        (dati.cards || []).forEach(card => {
+            if (!card.id) card.id = generaIdUnivoco();
+        });
+        dati.wallets.forEach(wallet => {
+            if (!wallet.id) wallet.id = generaIdUnivoco();
+        });
+        
         datiCaricati = dati;
         ordinaDati();
         mostraDati(datiCaricati);
@@ -237,11 +252,11 @@ function mostraPassword(passwords) {
         const card = document.createElement('div');
         card.className = 'preview-card-item';
         card.innerHTML = `
-            <h3 class="editable-field scrollable-text" data-value="${escapeHtml(pwd.piattaforma)}" data-field="piattaforma" data-index="${index}" data-type="password">${escapeHtml(pwd.piattaforma)}</h3>
+            <h3 class="editable-field scrollable-text" data-value="${escapeHtml(pwd.piattaforma)}" data-field="piattaforma" data-id="${pwd.id}" data-type="password">${escapeHtml(pwd.piattaforma)}</h3>
             <div class="field-container">
                 <label class="field-label">Username</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.username)}" data-field="username" data-index="${index}" data-type="password">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.username)}" data-field="username" data-id="${pwd.id}" data-type="password">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -255,7 +270,7 @@ function mostraPassword(passwords) {
             <div class="field-container">
                 <label class="field-label">Password</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.password)}" data-field="password" data-index="${index}" data-type="password">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.password)}" data-field="password" data-id="${pwd.id}" data-type="password">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -269,7 +284,7 @@ function mostraPassword(passwords) {
             <div class="field-container">
                 <label class="field-label">Nota</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.nota || '-')}" data-field="nota" data-index="${index}" data-type="password" data-nota="true">${pwd.nota ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.nota || '-')}" data-field="nota" data-id="${pwd.id}" data-type="password" data-nota="true">${pwd.nota ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -283,17 +298,17 @@ function mostraPassword(passwords) {
             <div class="field-container">
                 <label class="field-label">URL</label>
                 <div class="content-wrapper">
-                    <span href="${escapeHtml(pwd.url || '#')}" class="editable-field url-field scrollable-text" data-value="${escapeHtml(pwd.url || '-')}" data-field="url" data-index="${index}" data-type="password" target="_blank" rel="noopener noreferrer">${escapeHtml(pwd.url || '-')}</span>
+                    <span href="${escapeHtml(pwd.url || '#')}" class="editable-field url-field scrollable-text" data-value="${escapeHtml(pwd.url || '-')}" data-field="url" data-id="${pwd.id}" data-type="password" target="_blank" rel="noopener noreferrer">${escapeHtml(pwd.url || '-')}</span>
                 </div>
             </div>
             <div class="field-container">
                 <label class="field-label">Categoria</label>
                 <div class="content-wrapper">
-                    <span class="editable-field scrollable-text" data-value="${escapeHtml(pwd.categoria || '-')}" data-field="categoria" data-index="${index}" data-type="password">${escapeHtml(pwd.categoria || '-')}</span>
+                    <span class="editable-field scrollable-text" data-value="${escapeHtml(pwd.categoria || '-')}" data-field="categoria" data-id="${pwd.id}" data-type="password">${escapeHtml(pwd.categoria || '-')}</span>
                 </div>
             </div>
             <div class="btn-container">
-                <button class="btn btn-danger" onclick="mostraModaleEliminazione(${index}, 'password')">
+                <button class="btn btn-danger" onclick="mostraModaleEliminazione('${pwd.id}', 'password')">
                     <i class="fas fa-trash"></i> Elimina
                 </button>
             </div>
@@ -324,11 +339,11 @@ function mostraCarte(cards) {
         const cardElement = document.createElement('div');
         cardElement.className = 'preview-card-item';
         cardElement.innerHTML = `
-        <h3 class="editable-field scrollable-text" data-value="${escapeHtml(card.ente)}" data-field="ente" data-index="${index}" data-type="card">${escapeHtml(card.ente)}</h3>    
-        <div class="field-container">
+            <h3 class="editable-field scrollable-text" data-value="${escapeHtml(card.ente)}" data-field="ente" data-id="${card.id}" data-type="card">${escapeHtml(card.ente)}</h3>    
+            <div class="field-container">
                 <label class="field-label">PAN</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.pan)}" data-field="pan" data-index="${index}" data-type="card">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.pan)}" data-field="pan" data-id="${card.id}" data-type="card">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -342,7 +357,7 @@ function mostraCarte(cards) {
             <div class="field-container">
                 <label class="field-label">Data scadenza</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.dataScadenza)}" data-field="dataScadenza" data-index="${index}" data-type="card">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.dataScadenza)}" data-field="dataScadenza" data-id="${card.id}" data-type="card">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -356,7 +371,7 @@ function mostraCarte(cards) {
             <div class="field-container">
                 <label class="field-label">CVV/CVC2</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.cvv)}" data-field="cvv" data-index="${index}" data-type="card">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.cvv)}" data-field="cvv" data-id="${card.id}" data-type="card">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -370,7 +385,7 @@ function mostraCarte(cards) {
             <div class="field-container">
                 <label class="field-label">PIN</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.pin)}" data-field="pin" data-index="${index}" data-type="card">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.pin)}" data-field="pin" data-id="${card.id}" data-type="card">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -384,7 +399,7 @@ function mostraCarte(cards) {
             <div class="field-container">
                 <label class="field-label">Nota</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.nota || '-')}" data-field="nota" data-index="${index}" data-type="card" data-nota="true">${card.nota ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.nota || '-')}" data-field="nota" data-id="${card.id}" data-type="card" data-nota="true">${card.nota ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -398,11 +413,11 @@ function mostraCarte(cards) {
             <div class="field-container">
                 <label class="field-label">Circuito</label>
                 <div class="content-wrapper">
-                    <span class="editable-field scrollable-text" data-value="${escapeHtml(card.circuito || '-')}" data-field="circuito" data-index="${index}" data-type="card">${escapeHtml(card.circuito || '-')}</span>
+                    <span class="editable-field scrollable-text" data-value="${escapeHtml(card.circuito || '-')}" data-field="circuito" data-id="${card.id}" data-type="card">${escapeHtml(card.circuito || '-')}</span>
                 </div>
             </div>
             <div class="btn-container">
-                <button class="btn btn-danger" onclick="mostraModaleEliminazione(${index}, 'card')">
+                <button class="btn btn-danger" onclick="mostraModaleEliminazione('${card.id}', 'card')">
                     <i class="fas fa-trash"></i> Elimina
                 </button>
             </div>
@@ -433,11 +448,11 @@ function mostraWallet(wallets) {
         const card = document.createElement('div');
         card.className = 'preview-card-item';
         card.innerHTML = `
-            <h3 class="editable-field scrollable-text" data-value="${escapeHtml(wallet.wallet)}" data-field="wallet" data-index="${index}" data-type="wallet">${escapeHtml(wallet.wallet)}</h3>
+            <h3 class="editable-field scrollable-text" data-value="${escapeHtml(wallet.wallet)}" data-field="wallet" data-id="${wallet.id}" data-type="wallet">${escapeHtml(wallet.wallet)}</h3>
             <div class="field-container">
                 <label class="field-label">Utente</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.utente)}" data-field="utente" data-index="${index}" data-type="wallet">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.utente)}" data-field="utente" data-id="${wallet.id}" data-type="wallet">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -451,7 +466,7 @@ function mostraWallet(wallets) {
             <div class="field-container">
                 <label class="field-label">Password</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.password)}" data-field="password" data-index="${index}" data-type="wallet">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.password)}" data-field="password" data-id="${wallet.id}" data-type="wallet">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -465,7 +480,7 @@ function mostraWallet(wallets) {
             <div class="field-container">
                 <label class="field-label">Chiave</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.key || '-')}" data-field="key" data-index="${index}" data-type="wallet" data-key="true">${wallet.key ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.key || '-')}" data-field="key" data-id="${wallet.id}" data-type="wallet" data-key="true">${wallet.key ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -479,7 +494,7 @@ function mostraWallet(wallets) {
             <div class="field-container">
                 <label class="field-label">Indirizzo</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.indirizzo || '-')}" data-field="indirizzo" data-index="${index}" data-type="wallet" data-indirizzo="true">${wallet.indirizzo ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.indirizzo || '-')}" data-field="indirizzo" data-id="${wallet.id}" data-type="wallet" data-indirizzo="true">${wallet.indirizzo ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -493,7 +508,7 @@ function mostraWallet(wallets) {
             <div class="field-container">
                 <label class="field-label">Nota</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.nota || '-')}" data-field="nota" data-index="${index}" data-type="wallet" data-nota="true">${wallet.nota ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.nota || '-')}" data-field="nota" data-id="${wallet.id}" data-type="wallet" data-nota="true">${wallet.nota ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
@@ -507,11 +522,11 @@ function mostraWallet(wallets) {
             <div class="field-container">
                 <label class="field-label">Tipologia</label>
                 <div class="content-wrapper">
-                    <span class="editable-field scrollable-text" data-value="${escapeHtml(wallet.tipologia || '-')}" data-field="tipologia" data-index="${index}" data-type="wallet">${escapeHtml(wallet.tipologia || '-')}</span>
+                    <span class="editable-field scrollable-text" data-value="${escapeHtml(wallet.tipologia || '-')}" data-field="tipologia" data-id="${wallet.id}" data-type="wallet">${escapeHtml(wallet.tipologia || '-')}</span>
                 </div>
             </div>
             <div class="btn-container">
-                <button class="btn btn-danger" onclick="mostraModaleEliminazione(${index}, 'wallet')">
+                <button class="btn btn-danger" onclick="mostraModaleEliminazione('${wallet.id}', 'wallet')">
                     <i class="fas fa-trash"></i> Elimina
                 </button>
             </div>
@@ -537,7 +552,7 @@ function handleFieldEdit(event) {
 
     const value = element.dataset.value;
     const field = element.dataset.field;
-    const index = parseInt(element.dataset.index);
+    const id = element.dataset.id;
     const type = element.dataset.type;
 
     // Crea contenitore per input e pulsanti
@@ -572,15 +587,15 @@ function handleFieldEdit(event) {
         
         // Mostra modale di conferma
         mostraModaleConfermaModifica(value, newValue, () => {
-            applicaModifica(element, container, newValue, field, index, type);
+            applicaModifica(element, container, newValue, field, id, type);
         }, () => {
-            annullaModifica(element, container, value, field, index, type);
+            annullaModifica(element, container, value, field, id, type);
         });
     });
 
     // Gestisci annullamento
     cancelBtn.addEventListener('click', () => {
-        annullaModifica(element, container, value, field, index, type);
+        annullaModifica(element, container, value, field, id, type);
     });
 
     // Gestisci invio da tastiera
@@ -600,7 +615,6 @@ function handleFieldEdit(event) {
 
 // Mostra modale di conferma modifica
 function mostraModaleConfermaModifica(oldValue, newValue, onConfirm, onCancel) {
-    // Crea modale
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.style.display = 'flex';
@@ -633,19 +647,16 @@ function mostraModaleConfermaModifica(oldValue, newValue, onConfirm, onCancel) {
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
     
-    // Gestisci conferma
     confirmBtnModal.addEventListener('click', () => {
         document.body.removeChild(modal);
         onConfirm();
     });
     
-    // Gestisci annullamento
     cancelBtnModal.addEventListener('click', () => {
         document.body.removeChild(modal);
         onCancel();
     });
     
-    // Chiudi con click fuori dal modale
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             document.body.removeChild(modal);
@@ -655,11 +666,11 @@ function mostraModaleConfermaModifica(oldValue, newValue, onConfirm, onCancel) {
 }
 
 // Applica la modifica al campo
-function applicaModifica(originalElement, container, newValue, field, index, type) {
+function applicaModifica(originalElement, container, newValue, field, id, type) {
     const isSensitive = field === 'username' || field === 'password' || field === 'nota' || 
-                    field === 'pan' || field === 'dataScadenza' || 
-                    field === 'cvv' || field === 'pin' || field === 'utente' || 
-                    field === 'key' || field === 'indirizzo';
+                       field === 'pan' || field === 'dataScadenza' || 
+                       field === 'cvv' || field === 'pin' || field === 'utente' || 
+                       field === 'key' || field === 'indirizzo';
     
     if (field === 'url') {
         const newElement = document.createElement('a');
@@ -667,7 +678,7 @@ function applicaModifica(originalElement, container, newValue, field, index, typ
         newElement.className = 'editable-field url-field scrollable-text';
         newElement.dataset.value = newValue || '-';
         newElement.dataset.field = field;
-        newElement.dataset.index = index;
+        newElement.dataset.id = id;
         newElement.dataset.type = type;
         newElement.textContent = newValue || '-';
         newElement.target = '_blank';
@@ -679,7 +690,7 @@ function applicaModifica(originalElement, container, newValue, field, index, typ
         newElement.textContent = isSensitive && newValue ? '••••••••••••' : (newValue || '-');
         newElement.dataset.value = newValue || '-';
         newElement.dataset.field = field;
-        newElement.dataset.index = index;
+        newElement.dataset.id = id;
         newElement.dataset.type = type;
         newElement.className = `editable-field scrollable-text${isSensitive ? ' hidden-content' : ''}${field === 'url' ? ' url-field' : ''}`;
         if (isSensitive && (field === 'nota' || field === 'key' || field === 'indirizzo')) {
@@ -690,11 +701,11 @@ function applicaModifica(originalElement, container, newValue, field, index, typ
 
     // Aggiorna i dati
     if (type === 'password') {
-        modificaPassword(index, field, newValue);
+        modificaPassword(id, field, newValue);
     } else if (type === 'card') {
-        modificaCarta(index, field, newValue);
+        modificaCarta(id, field, newValue);
     } else if (type === 'wallet') {
-        modificaWallet(index, field, newValue);
+        modificaWallet(id, field, newValue);
     }
 
     aggiungiEventListenersEditabili();
@@ -702,14 +713,14 @@ function applicaModifica(originalElement, container, newValue, field, index, typ
 }
 
 // Annulla la modifica
-function annullaModifica(originalElement, container, value, field, index, type) {
+function annullaModifica(originalElement, container, value, field, id, type) {
     if (field === 'url') {
         const newElement = document.createElement('a');
         newElement.href = value || '#';
         newElement.className = 'editable-field url-field scrollable-text';
         newElement.dataset.value = value || '-';
         newElement.dataset.field = field;
-        newElement.dataset.index = index;
+        newElement.dataset.id = id;
         newElement.dataset.type = type;
         newElement.textContent = value || '-';
         newElement.target = '_blank';
@@ -725,7 +736,7 @@ function annullaModifica(originalElement, container, value, field, index, type) 
         newElement.textContent = isSensitive && value !== '-' ? '••••••••••••' : (value || '-');
         newElement.dataset.value = value || '-';
         newElement.dataset.field = field;
-        newElement.dataset.index = index;
+        newElement.dataset.id = id;
         newElement.dataset.type = type;
         newElement.className = `editable-field scrollable-text${isSensitive ? ' hidden-content' : ''}${field === 'url' ? ' url-field' : ''}`;
         if (isSensitive && (field === 'nota' || field === 'key' || field === 'indirizzo')) {
@@ -766,6 +777,7 @@ function copiaTestoAppunti(testo, tipo) {
 // Aggiungi password
 function aggiungiPassword() {
     const nuovaPassword = {
+        id: generaIdUnivoco(),
         piattaforma: 'Nuova Piattaforma',
         username: '',
         password: generaPasswordCasuale(),
@@ -784,6 +796,7 @@ function aggiungiPassword() {
 function aggiungiCarta() {
     if (!datiCaricati.cards) datiCaricati.cards = [];
     const nuovaCarta = {
+        id: generaIdUnivoco(),
         ente: 'Nuovo Ente',
         pan: '',
         dataScadenza: '',
@@ -802,6 +815,7 @@ function aggiungiCarta() {
 // Aggiungi wallet
 function aggiungiWallet() {
     const nuovoWallet = {
+        id: generaIdUnivoco(),
         wallet: 'Nuovo Wallet',
         utente: '',
         password: generaPasswordCasuale(),
@@ -818,9 +832,10 @@ function aggiungiWallet() {
 }
 
 // Modifica password
-function modificaPassword(index, field, value) {
-    if (datiCaricati.passwords[index]) {
-        datiCaricati.passwords[index][field] = value;
+function modificaPassword(id, field, value) {
+    const password = datiCaricati.passwords.find(pwd => pwd.id === id);
+    if (password) {
+        password[field] = value;
         popolaFiltri(datiCaricati);
         ordinaDati();
         mostraDati(datiCaricati);
@@ -828,19 +843,23 @@ function modificaPassword(index, field, value) {
 }
 
 // Modifica carta
-function modificaCarta(index, field, value) {
-    if (datiCaricati.cards && datiCaricati.cards[index]) {
-        datiCaricati.cards[index][field] = value;
-        popolaFiltri(datiCaricati);
-        ordinaDati();
-        mostraDati(datiCaricati);
+function modificaCarta(id, field, value) {
+    if (datiCaricati.cards) {
+        const card = datiCaricati.cards.find(card => card.id === id);
+        if (card) {
+            card[field] = value;
+            popolaFiltri(datiCaricati);
+            ordinaDati();
+            mostraDati(datiCaricati);
+        }
     }
 }
 
 // Modifica wallet
-function modificaWallet(index, field, value) {
-    if (datiCaricati.wallets[index]) {
-        datiCaricati.wallets[index][field] = value;
+function modificaWallet(id, field, value) {
+    const wallet = datiCaricati.wallets.find(wallet => wallet.id === id);
+    if (wallet) {
+        wallet[field] = value;
         popolaFiltri(datiCaricati);
         ordinaDati();
         mostraDati(datiCaricati);
@@ -848,17 +867,19 @@ function modificaWallet(index, field, value) {
 }
 
 // Mostra modale per confermare eliminazione
-function mostraModaleEliminazione(index, type) {
+function mostraModaleEliminazione(id, type) {
     let itemName = '';
     if (type === 'password') {
-        itemName = datiCaricati.passwords[index]?.piattaforma || 'Password';
+        const pwd = datiCaricati.passwords.find(pwd => pwd.id === id);
+        itemName = pwd?.piattaforma || 'Password';
     } else if (type === 'card') {
-        itemName = datiCaricati.cards[index]?.ente || 'Carta';
+        const card = datiCaricati.cards.find(card => card.id === id);
+        itemName = card?.ente || 'Carta';
     } else if (type === 'wallet') {
-        itemName = datiCaricati.wallets[index]?.wallet || 'Wallet';
+        const wallet = datiCaricati.wallets.find(wallet => wallet.id === id);
+        itemName = wallet?.wallet || 'Wallet';
     }
 
-    // Crea modale
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.style.display = 'flex';
@@ -891,16 +912,15 @@ function mostraModaleEliminazione(index, type) {
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
 
-    // Gestisci conferma eliminazione
     confirmBtn.addEventListener('click', () => {
         if (type === 'password') {
-            datiCaricati.passwords.splice(index, 1);
+            datiCaricati.passwords = datiCaricati.passwords.filter(pwd => pwd.id !== id);
             mostraMessaggio('Password eliminata con successo!', 'successo');
         } else if (type === 'card') {
-            datiCaricati.cards.splice(index, 1);
+            datiCaricati.cards = datiCaricati.cards.filter(card => card.id !== id);
             mostraMessaggio('Carta eliminata con successo!', 'successo');
         } else if (type === 'wallet') {
-            datiCaricati.wallets.splice(index, 1);
+            datiCaricati.wallets = datiCaricati.wallets.filter(wallet => wallet.id !== id);
             mostraMessaggio('Wallet eliminato con successo!', 'successo');
         }
         mostraDati(datiCaricati);
@@ -908,12 +928,10 @@ function mostraModaleEliminazione(index, type) {
         document.body.removeChild(modal);
     });
 
-    // Gestisci annullamento
     cancelBtn.addEventListener('click', () => {
         document.body.removeChild(modal);
     });
     
-    // Chiudi con click fuori dal modale
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             document.body.removeChild(modal);
