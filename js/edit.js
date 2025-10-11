@@ -778,7 +778,7 @@ function copiaTestoAppunti(testo, tipo) {
 function aggiungiPassword() {
     const nuovaPassword = {
         id: generaIdUnivoco(),
-        piattaforma: 'Nuova Piattaforma',
+        piattaforma: ' ',
         username: '',
         password: generaPasswordCasuale(),
         url: '',

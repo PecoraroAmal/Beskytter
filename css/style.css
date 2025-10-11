@@ -248,8 +248,8 @@ h2 {
 .btn-container {
     display: flex;
     gap: 12px;
-    justify-content: flex-end;
-    margin-top: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 /* Stile delle card e contenitori dati */
