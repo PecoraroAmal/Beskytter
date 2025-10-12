@@ -1093,6 +1093,7 @@ async function scaricaFile(encrypted) {
     try {
         let contenuto;
         if (encrypted) {
+            mostraMessaggio('Crittografia in corso...', 'info');
             contenuto = await criptaDati(datiCaricati, password);
         } else {
             contenuto = JSON.stringify(datiCaricati, null, 2);
