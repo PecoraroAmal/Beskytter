@@ -67,6 +67,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Gestione toggle sezioni
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => toggleSection('passwordContainer', togglePasswordBtn));
+    }
+    const toggleCardBtn = document.getElementById('toggleCardBtn');
+    if (toggleCardBtn) {
+        toggleCardBtn.addEventListener('click', () => toggleSection('cardContainer', toggleCardBtn));
+    }
+    const toggleWalletBtn = document.getElementById('toggleWalletBtn');
+    if (toggleWalletBtn) {
+        toggleWalletBtn.addEventListener('click', () => toggleSection('walletContainer', toggleWalletBtn));
+    }
 });
 
 // Gestisce il caricamento del file selezionato
@@ -164,6 +178,18 @@ function ordinaDati() {
     datiCaricati.passwords.sort((a, b) => a.piattaforma.localeCompare(b.piattaforma, 'it', { sensitivity: 'base' }));
     datiCaricati.cards?.sort((a, b) => a.ente.localeCompare(b.ente, 'it', { sensitivity: 'base' }));
     datiCaricati.wallets.sort((a, b) => a.wallet.localeCompare(b.wallet, 'it', { sensitivity: 'base' }));
+}
+
+// Funzione per gestire il toggle delle sezioni
+function toggleSection(containerId, button) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        const isHidden = container.classList.contains('hidden');
+        container.classList.toggle('hidden');
+        button.innerHTML = isHidden ? 
+            `<i class="fas fa-eye-slash"></i> Nascondi ${containerId.replace('Container', '')}`:
+            `<i class="fas fa-eye"></i> Mostra ${containerId.replace('Container', '')}`;
+    }
 }
 
 // Mostra tutti i dati nelle rispettive sezioni
@@ -485,6 +511,8 @@ function copiaTestoAppunti(testo, tipo) {
 
 // Filtra i dati in base agli input di ricerca e filtri
 function filtraDati() {
+    if (!datiCaricati) return;
+
     const passwordSearchInput = document.getElementById('passwordSearchInput');
     const categoryFilter = document.getElementById('categoryFilter');
     const cardSearchInput = document.getElementById('cardSearchInput');

@@ -53,7 +53,6 @@
 
             <section class="edit-section">
                 <h2>Password</h2>
-                <div class="form-card">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="passwordSearchInput">Cerca password</label>
@@ -71,18 +70,19 @@
                             <i class="fas fa-plus"></i> Aggiungi Password
                         </button>
                     </div>
-                    <div id="passwordContainer">
+                    <button class="toggle-btn" id="togglePasswordBtn">
+                        <i class="fas fa-eye-slash"></i> Nascondi Password
+                    </button>
+                    <div id="passwordContainer" class="preview-card">
                         <div class="empty-state">
                             <i class="fas fa-lock"></i>
                             <p>Nessuna password salvata</p>
                         </div>
                     </div>
-                </div>
             </section>
 
             <section class="edit-section">
                 <h2>Carte</h2>
-                <div class="form-card">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cardSearchInput">Cerca carte</label>
@@ -100,18 +100,19 @@
                             <i class="fas fa-plus"></i> Aggiungi Carta
                         </button>
                     </div>
-                    <div id="cardContainer">
+                    <button class="toggle-btn" id="toggleCardBtn">
+                        <i class="fas fa-eye-slash"></i> Nascondi Carte
+                    </button>
+                    <div id="cardContainer" class="preview-card">
                         <div class="empty-state">
                             <i class="fas fa-credit-card"></i>
                             <p>Nessuna carta salvata</p>
                         </div>
                     </div>
-                </div>
             </section>
 
             <section class="edit-section">
                 <h2>Wallet</h2>
-                <div class="form-card">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="walletSearchInput">Cerca wallet</label>
@@ -129,13 +130,15 @@
                             <i class="fas fa-plus"></i> Aggiungi Wallet
                         </button>
                     </div>
-                    <div id="walletContainer">
+                    <button class="toggle-btn" id="toggleWalletBtn">
+                        <i class="fas fa-eye-slash"></i> Nascondi Wallet
+                    </button>
+                    <div id="walletContainer" class="preview-card">
                         <div class="empty-state">
                             <i class="fas fa-wallet"></i>
                             <p>Nessun wallet salvato</p>
                         </div>
                     </div>
-                </div>
             </section>
 
             <section class="download-section">

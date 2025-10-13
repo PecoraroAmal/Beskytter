@@ -1139,3 +1139,41 @@ h2 {
     font-size: 0.9rem;
     margin-top: var(--spacing-sm);
 }
+
+/* Stili per i pulsanti di toggle delle sezioni */
+.toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    margin-bottom: 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), #2d875a);
+    color: white;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 153, 102, 0.2);
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+}
+
+.toggle-btn:active {
+    transform: translateY(0);
+}
+
+.toggle-btn i {
+    font-size: 1.1rem;
+}
+
+/* Classe per nascondere il contenuto */
+.hidden {
+    display: none;
+}
