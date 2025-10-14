@@ -1,10 +1,10 @@
-# Beskytter - Gestore di Password
+# Beskytter™ - Gestore di Password
 
 
-👉 **[Vai al sito online](https://pecoraroamal.github.io/Beskytter/)**
+👉 **[Vai al sito online](https://pecoraroamal.github.io/Beskytter™/)**
 
 
-**Beskytter** è un'applicazione web per la gestione di password, carte di credito/debito e wallet digitali. Progettata con un focus sulla privacy e la sicurezza, Beskytter consente agli utenti di salvare, gestire e proteggere le proprie credenziali in un file JSON criptato localmente, senza mai trasmettere dati online.
+**Beskytter™** è un'applicazione web per la gestione di password, carte di credito/debito e wallet digitali. Progettata con un focus sulla privacy e la sicurezza, Beskytter™ consente agli utenti di salvare, gestire e proteggere le proprie credenziali in un file JSON criptato localmente, senza mai trasmettere dati online.
 
 ---
 
