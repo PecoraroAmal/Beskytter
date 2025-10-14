@@ -1,3 +1,16 @@
+/**
+ * home.js
+ * 
+ * Gestisce la logica della pagina principale di Beskytter™, inclusi caricamento file, 
+ * decrittazione, visualizzazione e filtraggio di password, carte e wallet.
+ * 
+ * @file home.js
+ * @version 1.0.0
+ * @author [Your Name]
+ * @license MIT
+ * @description Script per la gestione della home page di Beskytter™, con funzionalità di caricamento file JSON, decrittazione e filtraggio dati.
+ */
+
 // Variabili globali per gestire i dati caricati e il file
 let datiCaricati = null;
 let fileCaricato = null;
@@ -132,7 +145,12 @@ async function apriFile() {
 
         if (!validaStrutturaJSON(dati)) throw new Error('Struttura JSON non valida');
 
-        datiCaricati = dati;
+        // Inizializza sezioni mancanti con array vuoti
+        datiCaricati = {
+            passwords: Array.isArray(dati.passwords) ? dati.passwords : [],
+            cards: Array.isArray(dati.cards) ? dati.cards : [],
+            wallets: Array.isArray(dati.wallets) ? dati.wallets : []
+        };
         ordinaDati();
         mostraDati(datiCaricati);
         popolaFiltri(datiCaricati);
@@ -166,10 +184,11 @@ async function apriFile() {
 
 // Valida la struttura del JSON caricato
 function validaStrutturaJSON(dati) {
-    return dati && 
-           Array.isArray(dati.passwords) && 
-           Array.isArray(dati.wallets) && 
-           (dati.cards === undefined || Array.isArray(dati.cards));
+    // Verifica che i dati siano un oggetto e che ogni sezione, se presente, sia un array
+    return dati && typeof dati === 'object' &&
+           (dati.passwords === undefined || Array.isArray(dati.passwords)) &&
+           (dati.cards === undefined || Array.isArray(dati.cards)) &&
+           (dati.wallets === undefined || Array.isArray(dati.wallets));
 }
 
 // Ordina i dati alfabeticamente
@@ -194,9 +213,9 @@ function toggleSection(containerId, button) {
 
 // Mostra tutti i dati nelle rispettive sezioni
 function mostraDati(dati) {
-    mostraPassword(dati.passwords);
+    mostraPassword(dati.passwords || []);
     mostraCarte(dati.cards || []);
-    mostraWallet(dati.wallets);
+    mostraWallet(dati.wallets || []);
 }
 
 // Mostra le password nella sezione dedicata
@@ -530,7 +549,7 @@ function filtraDati() {
     const tipologia = typeFilter.value.toLowerCase();
 
     // Filtro password
-    const passwordsFiltrate = datiCaricati.passwords.filter(pwd => {
+    const passwordsFiltrate = (datiCaricati.passwords || []).filter(pwd => {
         const matchRicerca = !ricercaPassword || 
             pwd.piattaforma.toLowerCase().includes(ricercaPassword) ||
             pwd.username.toLowerCase().includes(ricercaPassword) ||
@@ -563,7 +582,7 @@ function filtraDati() {
     }).sort((a, b) => a.ente.localeCompare(b.ente, 'it', { sensitivity: 'base' }));
 
     // Filtro wallet
-    const walletsFiltrati = datiCaricati.wallets.filter(wallet => {
+    const walletsFiltrati = (datiCaricati.wallets || []).filter(wallet => {
         const matchRicerca = !ricercaWallet || 
             wallet.wallet.toLowerCase().includes(ricercaWallet) ||
             (wallet.utente && wallet.utente.toLowerCase().includes(ricercaWallet)) ||
@@ -597,7 +616,7 @@ function popolaFiltroCategorie(dati) {
     if (!select) return;
 
     const categorie = new Set();
-    dati.passwords.forEach(pwd => {
+    (dati.passwords || []).forEach(pwd => {
         if (pwd.categoria) categorie.add(pwd.categoria);
     });
 
@@ -635,7 +654,7 @@ function popolaFiltroTipologie(dati) {
     if (!select) return;
 
     const tipologie = new Set();
-    dati.wallets.forEach(wallet => {
+    (dati.wallets || []).forEach(wallet => {
         if (wallet.tipologia) tipologie.add(wallet.tipologia);
     });
 
