@@ -1,16 +1,3 @@
-/**
- * home.js
- * 
- * Gestisce la logica della pagina principale di Beskytter™, inclusi caricamento file, 
- * decrittazione, visualizzazione e filtraggio di password, carte e wallet.
- * 
- * @file home.js
- * @version 1.0.0
- * @author [Your Name]
- * @license MIT
- * @description Script per la gestione della home page di Beskytter™, con funzionalità di caricamento file JSON, decrittazione e filtraggio dati.
- */
-
 // Variabili globali per gestire i dati caricati e il file
 let datiCaricati = null;
 let fileCaricato = null;
