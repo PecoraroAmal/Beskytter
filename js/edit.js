@@ -218,8 +218,8 @@ async function apriFile() {
     } catch (errore) {
         console.error('Errore apertura file:', errore);
         mostraMessaggio(password ? 
-            'Password errata o file corrotto: ' + errore.message : 
-            'File non valido. Se è criptato, inserisci la password: ' + errore.message, 'errore');
+            'Password errata o file corrotto' : 
+            'File non valido. Se è criptato, inserisci la password', 'errore');
     } finally {
         if (btn) {
             btn.disabled = false;
