@@ -1207,8 +1207,9 @@ h2 {
 
 @media (max-width: 600px) {
     .social-links {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .social-label {
