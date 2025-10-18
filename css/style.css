@@ -38,6 +38,13 @@ body {
     line-height: 1.6;
 }
 
+/* Layout principale e contenitori */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 /* Barra di navigazione superiore */
 .navbar {
     background-color: var(--card-background);
@@ -87,13 +94,6 @@ body {
 .nav-link.active {
     background-color: var(--primary-color);
     color: white;
-}
-
-/* Layout principale e contenitori */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
 }
 
 /* Contenuto principale */
@@ -171,6 +171,80 @@ h2 {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Stile delle card e contenitori dati */
+.form-card, .preview-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+
+/* Preview card items */
+.preview-card-item {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.preview-card-item h3 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+}
+
+.field-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.field-label {
+    width: 120px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.content-wrapper {
+    flex: 1;
+    overflow: hidden;
+}
+
+.scrollable-text {
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 2px;
+}
+
+.hidden-content {
+    cursor: pointer;
+}
+
+.editable-field {
+    cursor: pointer;
+    display: inline-block;
+    min-width: 100px;
+    padding: 4px 8px;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+}
+
+.editable-field:hover {
+    background-color: #f0f0f0;
+}
+
+.url-field {
+    color: #000000 !important;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
 }
 
 /* Sistema di pulsanti e azioni */
@@ -252,78 +326,37 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Stile delle card e contenitori dati */
-.form-card, .preview-card {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    padding: 24px;
-}
-
-/* Preview card items */
-.preview-card-item {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.preview-card-item h3 {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-}
-
-.field-container {
-    display: flex;
+/* Stili per i pulsanti di toggle delle sezioni */
+.toggle-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.field-label {
-    width: 120px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-.content-wrapper {
-    flex: 1;
-    overflow: hidden;
-}
-
-.scrollable-text {
-    display: inline-block;
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-    padding-bottom: 2px;
-}
-
-.hidden-content {
-    cursor: pointer;
-}
-
-.editable-field {
-    cursor: pointer;
-    display: inline-block;
-    min-width: 100px;
-    padding: 4px 8px;
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s;
-}
-
-.editable-field:hover {
-    background-color: #f0f0f0;
-}
-
-.url-field {
-    color: #000000 !important;
-}
-
-.button-group {
-    display: flex;
     gap: 8px;
+    padding: 10px 20px;
+    margin-bottom: 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-color), #2d875a);
+    color: white;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 153, 102, 0.2);
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+}
+
+.toggle-btn:active {
+    transform: translateY(0);
+}
+
+.toggle-btn i {
+    font-size: 1.1rem;
 }
 
 /* Stati vuoti e messaggi informativi */
@@ -336,31 +369,6 @@ h2 {
 .empty-state i {
     font-size: 2rem;
     margin-bottom: 12px;
-}
-
-/* Footer e informazioni legali */
-.footer {
-    text-align: center;
-    padding: 20px 0;
-    background-color: var(--card-background);
-    box-shadow: var(--shadow);
-    margin-top: 40px;
-}
-
-.footer p {
-    margin: 4px 0;
-    color: var(--secondary-color);
-}
-
-/* Sistema di notifiche toast */
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
 }
 
 /* Finestre modali e dialoghi */
@@ -425,10 +433,89 @@ h2 {
     background-color: #5a6268;
 }
 
-/* Animazioni e transizioni */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Footer e informazioni legali */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: var(--card-background);
+    box-shadow: var(--shadow);
+    margin-top: 40px;
+}
+
+.footer p {
+    margin: 4px 0;
+    color: var(--secondary-color);
+}
+
+/* Bottone donazioni e elementi correlati */
+.donation-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    margin: var(--spacing-lg) 0;
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--primary-color), #2d875a);
+    color: white;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.donation-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 153, 102, 0.2);
+    border-color: var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+}
+
+.donation-button:active {
+    transform: translateY(0);
+}
+
+.donation-note {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-top: var(--spacing-sm);
+}
+
+/* Footer social links container */
+.social-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    margin-top: 20px;
+}
+
+/* Individual social link styling */
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.social-link:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.social-link i {
+    font-size: 24px;
+}
+
+/* GitHub button in info.html footer */
+.btn.btn-primary i.fab.fa-github {
+    margin-right: 10px;
+    font-size: 24px;
 }
 
 /* Stili specifici per la pagina info */
@@ -471,148 +558,6 @@ h2 {
 
 .security-item:last-child {
     margin-bottom: 0;
-}
-
-.workflow-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-xl);
-}
-
-.workflow-option {
-    background: var(--card-background);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-lg);
-    box-shadow: var(--shadow);
-}
-
-.workflow-option h3 {
-    font-size: 1.4rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--primary-color);
-}
-
-.workflow-list {
-    counter-reset: workflow;
-    list-style: none;
-    padding: 0;
-}
-
-.workflow-item {
-    display: flex;
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-    position: relative;
-}
-
-.workflow-step {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.workflow-item h4 {
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-sm);
-    font-size: 1.1rem;
-}
-
-.workflow-item:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 20px;
-    top: 40px;
-    bottom: -40px;
-    width: 2px;
-    background: var(--border-color);
-}
-
-.download-section {
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-xl);
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-}
-
-.download-section h3 {
-    margin-bottom: var(--spacing-md);
-}
-
-.download-section p {
-    margin-bottom: var(--spacing-lg);
-}
-
-.feature-list {
-    list-style: none;
-    padding: 0;
-    margin-top: var(--spacing-md);
-    text-align: left;
-}
-
-.feature-list li {
-    padding-left: var(--spacing-lg);
-    margin-bottom: var(--spacing-sm);
-    position: relative;
-}
-
-.feature-list li::before {
-    content: '✓';
-    color: var(--primary-color);
-    position: absolute;
-    left: 0;
-}
-
-.master-password-section {
-    border: 2px solid var(--primary-color);
-    background: linear-gradient(to bottom, rgba(0,123,255,0.05), transparent);
-}
-
-.master-password-warning {
-    display: flex;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    margin: var(--spacing-md) 0;
-    background: rgba(220, 53, 69, 0.1);
-    border-radius: var(--border-radius);
-    border-left: 4px solid var(--danger);
-}
-
-.master-password-warning i {
-    font-size: 2rem;
-    color: var(--danger);
-    flex-shrink: 0;
-}
-
-.master-password-warning strong {
-    display: block;
-    color: var(--danger);
-    margin-bottom: var(--spacing-sm);
-}
-
-.master-password-warning ul {
-    list-style: none;
-    padding-left: var(--spacing-md);
-    margin: var(--spacing-sm) 0;
-}
-
-.master-password-warning li {
-    position: relative;
-    margin-bottom: var(--spacing-xs);
-}
-
-.master-password-warning li::before {
-    content: '•';
-    color: var(--danger);
-    position: absolute;
-    left: -1rem;
 }
 
 .security-card {
@@ -894,106 +839,146 @@ h2 {
     color: var(--text-primary);
 }
 
-@media (min-width: 769px) {
-    .field-container {
-        gap: 12px;
-    }
-
-    .field-label {
-        width: 120px;
-    }
+.master-password-section {
+    border: 2px solid var(--primary-color);
+    background: linear-gradient(to bottom, rgba(0,123,255,0.05), transparent);
 }
 
-@media (max-width: 768px) {
-    .container, .nav-container {
-        padding: 0 12px;
-    }
-
-    .nav-logo {
-        font-size: 1.2rem;
-    }
-
-    .nav-links {
-        gap: 8px;
-    }
-
-    .nav-link {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-    }
-
-    h2 {
-        font-size: 1.5rem;
-    }
-
-    .form-card, .preview-card, .preview-card-item {
-        padding: 16px;
-    }
-
-    .form-row {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .form-group {
-        min-width: 100%;
-    }
-
-    .field-container {
-        gap: 6px;
-    }
-
-    .field-label {
-        width: 100px;
-        font-size: 0.9rem;
-    }
-
-    .upload-zone {
-        padding: 30px 20px;
-    }
-
-    .btn-container {
-        flex-wrap: wrap;
-    }
-
-    .modal-content {
-        width: 95%;
-        padding: 20px;
-    }
-
-    .feature-card {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
-    }
-
-    .workflow-container {
-        grid-template-columns: 1fr;
-    }
-
-    .workflow-item {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        text-align: center;
-    }
-
-    .workflow-step {
-        margin: 0 auto;
-    }
-
-    .workflow-item::after {
-        display: none;
-    }
+.master-password-warning {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--danger);
 }
 
-@media (max-width: 480px) {
-    .field-label {
-        width: 80px;
-        font-size: 0.85rem;
-    }
+.master-password-warning i {
+    font-size: 2rem;
+    color: var(--danger);
+    flex-shrink: 0;
+}
 
-    .field-container {
-        gap: 4px;
-    }
+.master-password-warning strong {
+    display: block;
+    color: var(--danger);
+    margin-bottom: var(--spacing-sm);
+}
+
+.master-password-warning ul {
+    list-style: none;
+    padding-left: var(--spacing-md);
+    margin: var(--spacing-sm) 0;
+}
+
+.master-password-warning li {
+    position: relative;
+    margin-bottom: var(--spacing-xs);
+}
+
+.master-password-warning li::before {
+    content: '•';
+    color: var(--danger);
+    position: absolute;
+    left: -1rem;
+}
+
+.workflow-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.workflow-option {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow);
+}
+
+.workflow-option h3 {
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+}
+
+.workflow-list {
+    counter-reset: workflow;
+    list-style: none;
+    padding: 0;
+}
+
+.workflow-item {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+}
+
+.workflow-step {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.workflow-item h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.1rem;
+}
+
+.workflow-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: -40px;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.download-section {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.download-section h3 {
+    margin-bottom: var(--spacing-md);
+}
+
+.download-section p {
+    margin-bottom: var(--spacing-lg);
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--spacing-md);
+    text-align: left;
+}
+
+.feature-list li {
+    padding-left: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+}
+
+.feature-list li::before {
+    content: '✓';
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
 }
 
 /* Sistema di FAQ e domande frequenti */
@@ -1106,74 +1091,151 @@ h2 {
     margin-right: var(--spacing-xs);
 }
 
-/* Bottone donazioni e elementi correlati */
-.donation-button {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md) var(--spacing-xl);
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    margin: var(--spacing-lg) 0;
-    text-decoration: none;
-    background: linear-gradient(135deg, var(--primary-color), #2d875a);
-    color: white;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.donation-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(51, 153, 102, 0.2);
-    border-color: var(--primary-color);
-    background: transparent;
-    color: var(--primary-color);
-}
-
-.donation-button:active {
-    transform: translateY(0);
-}
-
-.donation-note {
-    color: var(--secondary-color);
-    font-size: 0.9rem;
-    margin-top: var(--spacing-sm);
-}
-
-/* Stili per i pulsanti di toggle delle sezioni */
-.toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    margin-bottom: 12px;
-    border-radius: var(--border-radius);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    background: linear-gradient(135deg, var(--primary-color), #2d875a);
-    color: white;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.toggle-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(51, 153, 102, 0.2);
-    border-color: var(--primary-color);
-    background: transparent;
-    color: var(--primary-color);
-}
-
-.toggle-btn:active {
-    transform: translateY(0);
-}
-
-.toggle-btn i {
-    font-size: 1.1rem;
-}
-
 /* Classe per nascondere il contenuto */
 .hidden {
     display: none;
+}
+
+/* Sistema di notifiche toast */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Animazioni e transizioni */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Media queries */
+@media (min-width: 769px) {
+    .field-container {
+        gap: 12px;
+    }
+
+    .field-label {
+        width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container, .nav-container {
+        padding: 0 12px;
+    }
+
+    .nav-logo {
+        font-size: 1.2rem;
+    }
+
+    .nav-links {
+        gap: 8px;
+    }
+
+    .nav-link {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-card, .preview-card, .preview-card-item {
+        padding: 16px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .form-group {
+        min-width: 100%;
+    }
+
+    .field-container {
+        gap: 6px;
+    }
+
+    .field-label {
+        width: 100px;
+        font-size: 0.9rem;
+    }
+
+    .upload-zone {
+        padding: 30px 20px;
+    }
+
+    .btn-container {
+        flex-wrap: wrap;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .feature-card {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .workflow-container {
+        grid-template-columns: 1fr;
+    }
+
+    .workflow-item {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+
+    .workflow-step {
+        margin: 0 auto;
+    }
+
+    .workflow-item::after {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .social-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .social-label {
+        margin-bottom: 8px;
+        font-size: 16px;
+    }
+
+    .social-link {
+        font-size: 16px;
+    }
+
+    .social-link i {
+        font-size: 20px;
+    }
+
+    .btn.btn-primary i.fab.fa-github {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .field-label {
+        width: 80px;
+        font-size: 0.85rem;
+    }
+
+    .field-container {
+        gap: 4px;
+    }
 }
