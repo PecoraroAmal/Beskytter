@@ -169,14 +169,6 @@ async function downloadEsempio() {
             "categoria": "Streaming"
         },
         {
-            "piattaforma": "HBO Max",
-            "Utente": "",
-            "Password": "",
-            "Nota": "Account per serie premium",
-            "url": "https://hbomax.com",
-            "categoria": "Streaming"
-        },
-        {
             "piattaforma": "Banca Generica",
             "Utente": "",
             "Password": "",
