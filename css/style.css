@@ -85,6 +85,23 @@ body {
     border-radius: var(--border-radius);
     transition: background-color 0.3s;
 }
+.nav-link-language {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+}
+.nav-link-language:hover {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+}
 
 .nav-link:hover {
     background-color: var(--primary-color);

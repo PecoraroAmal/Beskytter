@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beskytter™</title>
-    <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous">
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
     <link rel="icon" sizes="192x192" href="assets/android-icon.png">
@@ -21,112 +22,112 @@
             </div>
             <div class="nav-links">
                 <a href="index.html" class="nav-link active">Home</a>
-                <a href="edit.html" class="nav-link">Modifica</a>
+                <a href="edit.html" class="nav-link">Edit</a>
                 <a href="info.html" class="nav-link">Info</a>
             </div>
         </div>
     </nav>
 
-    <!-- Contenuto principale -->
+    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <!-- Sezione caricamento file -->
+            <!-- File Upload Section -->
             <section class="upload-section">
-                <h2>Carica il tuo file</h2>
+                <h2>Upload Your File</h2>
                 <div class="form-card">
                     <div class="upload-zone" id="uploadZone">
                         <input type="file" id="fileInput" accept=".json">
-                        <p>Trascina qui il tuo file JSON o clicca per selezionarlo</p>
+                        <p>Drag your JSON file here or click to select it</p>
                         <p class="file-name"></p>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="decryptPassword">Password di decrittazione</label>
-                            <input type="password" id="decryptPassword" class="input-field" placeholder="Inserisci la password se il file è criptato">
+                            <label for="decryptPassword">Decryption Password</label>
+                            <input type="password" id="decryptPassword" class="input-field" placeholder="Enter the password if the file is encrypted">
                         </div>
                     </div>
                     <div class="btn-container">
                         <button id="decryptBtn" class="btn btn-primary">
-                            <i class="fas fa-unlock"></i> Apri File
+                            <i class="fas fa-unlock"></i> Open File
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Sezione password -->
+            <!-- Password Section -->
             <section class="preview-section">
-                <h2>Password</h2>
+                <h2>Passwords</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="passwordSearchInput">Cerca password</label>
-                        <input type="text" id="passwordSearchInput" class="search-input" placeholder="Cerca password...">
+                        <label for="passwordSearchInput">Search Passwords</label>
+                        <input type="text" id="passwordSearchInput" class="search-input" placeholder="Search passwords...">
                     </div>
                     <div class="form-group">
-                        <label for="categoryFilter">Filtra per categoria</label>
+                        <label for="categoryFilter">Filter by Category</label>
                         <select id="categoryFilter" class="select-field">
-                            <option value="">Tutte le categorie</option>
+                            <option value="">All Categories</option>
                         </select>
                     </div>
                 </div>
                 <button class="toggle-btn" id="togglePasswordBtn">
-                    <i class="fas fa-eye-slash"></i> Nascondi Password
+                    <i class="fas fa-eye-slash"></i> Hide Passwords
                 </button>
                 <div id="passwordContainer" class="preview-card">
                     <div class="empty-state">
                         <i class="fas fa-lock"></i>
-                        <p>Nessuna password salvata</p>
+                        <p>No passwords saved</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Sezione carte -->
+            <!-- Cards Section -->
             <section class="preview-section">
-                <h2>Carte</h2>
+                <h2>Cards</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="cardSearchInput">Cerca carte</label>
-                        <input type="text" id="cardSearchInput" class="search-input" placeholder="Cerca carte...">
+                        <label for="cardSearchInput">Search Cards</label>
+                        <input type="text" id="cardSearchInput" class="search-input" placeholder="Search cards...">
                     </div>
                     <div class="form-group">
-                        <label for="circuitFilter">Filtra per circuito</label>
+                        <label for="circuitFilter">Filter by Network</label>
                         <select id="circuitFilter" class="select-field">
-                            <option value="">Tutti i circuiti</option>
+                            <option value="">All Networks</option>
                         </select>
                     </div>
                 </div>
                 <button class="toggle-btn" id="toggleCardBtn">
-                    <i class="fas fa-eye-slash"></i> Nascondi Carte
+                    <i class="fas fa-eye-slash"></i> Hide Cards
                 </button>
                 <div id="cardContainer" class="preview-card">
                     <div class="empty-state">
                         <i class="fas fa-credit-card"></i>
-                        <p>Nessuna carta salvata</p>
+                        <p>No cards saved</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Sezione wallet -->
+            <!-- Wallet Section -->
             <section class="preview-section">
                 <h2>Wallet</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="walletSearchInput">Cerca wallet</label>
-                        <input type="text" id="walletSearchInput" class="search-input" placeholder="Cerca wallet...">
+                        <label for="walletSearchInput">Search Wallets</label>
+                        <input type="text" id="walletSearchInput" class="search-input" placeholder="Search wallets...">
                     </div>
                     <div class="form-group">
-                        <label for="typeFilter">Filtra per tipologia</label>
+                        <label for="typeFilter">Filter by Type</label>
                         <select id="typeFilter" class="select-field">
-                            <option value="">Tutte le tipologie</option>
+                            <option value="">All Types</option>
                         </select>
                     </div>
                 </div>
                 <button class="toggle-btn" id="toggleWalletBtn">
-                    <i class="fas fa-eye-slash"></i> Nascondi Wallet
+                    <i class="fas fa-eye-slash"></i> Hide Wallets
                 </button>
                 <div id="walletContainer" class="preview-card">
                     <div class="empty-state">
                         <i class="fas fa-wallet"></i>
-                        <p>Nessun wallet salvato</p>
+                        <p>No wallets saved</p>
                     </div>
                 </div>
             </section>
@@ -137,17 +138,17 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Beskytter™ - Privacy First</p>
-            <p>Questo sito non memorizza né trasmette alcun dato personale. Tutti i dati caricati restano esclusivamente nel browser dell’utente e vengono eliminati alla chiusura della pagina.</p>
+            <p>This site does not store or transmit any personal data. All uploaded data remains solely in the user's browser and is deleted when the page is closed.</p>
             <p>
                 <a href="https://www.paypal.com/donate/?hosted_button_id=5Z5N9EBJERXC6" target="_blank" class="donation-button">
-                    Supporta il progetto
+                    Support the Project
                 </a>
             </p>
             <p class="donation-note">
-                La donazione è <strong>completamente volontaria</strong> e <strong>non garantisce accesso a funzionalità aggiuntive</strong>. Serve esclusivamente a supportare il progetto.
+                The donation is <strong>completely voluntary</strong> and <strong>does not grant access to additional features</strong>. It is solely to support the project.
             </p>
             <div class="social-links">
-                <p class="social-label">Seguici:</p>
+                <p class="social-label">Follow us:</p>
                 <a href="https://www.facebook.com/profile.php?id=61582398389771" target="_blank" class="social-link">
                     <i class="fab fa-facebook"></i>
                 </a>
@@ -165,6 +166,7 @@
     </footer>
 
     <script src="js/crypto.js"></script>
+    <script src="js/homedit.js"></script>
     <script src="js/home.js"></script>
 </body>
 </html>

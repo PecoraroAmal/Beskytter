@@ -1,5 +1,5 @@
-// Funzione per derivare una chiave crittografica da una password
-async function derivaChiave(password, salt) {
+// Function to derive a cryptographic key from a password
+async function deriveKey(password, salt) {
     const encoder = new TextEncoder();
     const passwordBuffer = encoder.encode(password);
     const keyMaterial = await window.crypto.subtle.importKey(
@@ -24,23 +24,23 @@ async function derivaChiave(password, salt) {
     );
 }
 
-// Funzione per criptare i dati
-async function criptaDati(dati, password) {
+// Function to encrypt data
+async function encryptData(data, password) {
     const salt = window.crypto.getRandomValues(new Uint8Array(16));
     const iv = window.crypto.getRandomValues(new Uint8Array(12));
-    const key = await derivaChiave(password, salt);
+    const key = await deriveKey(password, salt);
     
     const encoder = new TextEncoder();
-    const datiString = JSON.stringify(dati);
-    const datiBuffer = encoder.encode(datiString);
+    const dataString = JSON.stringify(data);
+    const dataBuffer = encoder.encode(dataString);
     
     const encrypted = await window.crypto.subtle.encrypt(
         { name: 'AES-GCM', iv: iv },
         key,
-        datiBuffer
+        dataBuffer
     );
     
-    // Combina salt + iv + dati criptati
+    // Combine salt + iv + encrypted data
     const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
     result.set(salt, 0);
     result.set(iv, salt.length);
@@ -49,15 +49,15 @@ async function criptaDati(dati, password) {
     return arrayBufferToBase64(result);
 }
 
-// Funzione per decriptare i dati
-async function decriptaDati(datiCriptati, password) {
+// Function to decrypt data
+async function decryptData(encryptedData, password) {
     try {
-        const data = base64ToArrayBuffer(datiCriptati);
+        const data = base64ToArrayBuffer(encryptedData);
         const salt = data.slice(0, 16);
         const iv = data.slice(16, 28);
         const encrypted = data.slice(28);
         
-        const key = await derivaChiave(password, salt);
+        const key = await deriveKey(password, salt);
         
         const decrypted = await window.crypto.subtle.decrypt(
             { name: 'AES-GCM', iv: iv },
@@ -66,14 +66,14 @@ async function decriptaDati(datiCriptati, password) {
         );
         
         const decoder = new TextDecoder();
-        const datiString = decoder.decode(decrypted);
-        return JSON.parse(datiString);
+        const dataString = decoder.decode(decrypted);
+        return JSON.parse(dataString);
     } catch (error) {
-        throw new Error('Errore nella decrittazione: password errata o file corrotto');
+        throw new Error('Decryption error: incorrect password or corrupted file');
     }
 }
 
-// Conversione da ArrayBuffer a Base64
+// Convert ArrayBuffer to Base64
 function arrayBufferToBase64(buffer) {
     const bytes = new Uint8Array(buffer);
     let binary = '';
@@ -83,7 +83,7 @@ function arrayBufferToBase64(buffer) {
     return window.btoa(binary);
 }
 
-// Conversione da Base64 a ArrayBuffer
+// Convert Base64 to ArrayBuffer
 function base64ToArrayBuffer(base64) {
     const binary = window.atob(base64);
     const bytes = new Uint8Array(binary.length);
@@ -93,13 +93,13 @@ function base64ToArrayBuffer(base64) {
     return bytes;
 }
 
-// Validazione struttura JSON
-function validaStrutturaJSON(dati) {
-    return dati &&
-           Array.isArray(dati.passwords) &&
-           Array.isArray(dati.wallets) &&
-           (!dati.cards || Array.isArray(dati.cards)) &&
-           dati.passwords.every(p => p.piattaforma && p.username && p.password) &&
-           dati.wallets.every(w => w.wallet && w.password) &&
-           (!dati.cards || dati.cards.every(c => c.ente && c.pan && c.dataScadenza && c.cvv && c.pin));
+// Validate JSON structure
+function validateJSONStructure(data) {
+    return data &&
+           Array.isArray(data.passwords) &&
+           Array.isArray(data.wallets) &&
+           (!data.cards || Array.isArray(data.cards)) &&
+           data.passwords.every(p => p.platform && p.username && p.password) &&
+           data.wallets.every(w => w.wallet && w.password) &&
+           (!data.cards || data.cards.every(c => c.issuer && c.pan && c.expiryDate && c.cvv && c.pin));
 }

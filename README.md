@@ -1,37 +1,39 @@
-# Beskytter™ - Gestore di Password
+# Beskytter™ - Password Manager
 
 
-👉 **[Vai al sito online](https://pecoraroamal.github.io/Beskytter/)**
+👉 **[Go to the website](https://pecoraroamal.github.io/Beskytter/)**
 
 
-**Beskytter™** è un'applicazione web per la gestione di password, carte di credito/debito e wallet digitali. Progettata con un focus sulla privacy e la sicurezza, Beskytter™ consente agli utenti di salvare, gestire e proteggere le proprie credenziali in un file JSON criptato localmente, senza mai trasmettere dati online.
-
----
-
-## Caratteristiche Principali
-
-- **Crittografia Locale**: Le credenziali vengono criptate direttamente nel browser utilizzando l'algoritmo AES-256 in modalità GCM, garantendo la massima sicurezza.
-- **File Portatile**: Le informazioni vengono salvate in un file JSON che può essere facilmente trasportato e archiviato in modo sicuro, anche su cloud.
-- **Gestione Universale**: Supporta la gestione di:
-  - Password di account e servizi
-  - Carte di credito/debito
-  - Wallet digitali (PayPal, Apple Pay, ecc.)
-  - Wallet crypto (Bitcoin, Ethereum, ecc.)
-- **Privacy Totale**: Nessun dato viene memorizzato o trasmesso a server esterni. Tutto rimane sul dispositivo dell'utente.
-- **Interfaccia Intuitiva**: Include funzionalità di ricerca, filtraggio per categoria e modifica inline delle credenziali.
-- **File di Esempio**: Un file JSON di esempio è disponibile per aiutare gli utenti a iniziare.
+**Beskytter™** is a web application for managing passwords, credit/debit cards and digital wallets. Designed with a focus on privacy and security, Beskytter™ allows users to save, manage and protect their credentials in a locally encrypted JSON file, without ever transmitting data online.
 
 ---
 
-## Tecnologie Utilizzate
+## Key Features
 
-- **HTML5**: Struttura semantica e accessibile.
-- **CSS3**: Stile moderno e responsive, con variabili CSS per una facile personalizzazione.
-- **JavaScript**: Logica per la gestione dei dati, crittografia e interazioni dinamiche.
-- **Web Crypto API**: Utilizzata per la crittografia e la decrittazione sicure.
-- **FontAwesome**: Icone per migliorare l'esperienza utente.
+- **Local Encryption**: Credentials are encrypted directly in the browser using the AES-256 algorithm in GCM mode, ensuring maximum security.
+- **Portable File**: Information is saved in a JSON file that can be easily transported and stored securely, even in the cloud.
+- **Universal Management**: Supports the management of:
+  - Account and service passwords
+  - Credit/debit cards
+  - Digital wallets (PayPal, Apple Pay, etc.)
+  - Crypto wallets (Bitcoin, Ethereum, etc.)
+- **Total Privacy**: No data is stored or transmitted to external servers. Everything remains on the user's device.
+- **Intuitive Interface**: Includes search functionality, category filtering, and inline credential editing.
+- **Sample File**: A sample JSON file is available to help users get started.
 
 ---
 
-## Licenza
-Questo progetto è rilasciato sotto la licenza **GNU Affero General Public License v3.0**. Vedi il file [LICENSE](LICENSE) per i dettagli.
+## Technologies Used
+
+- **HTML5**: Semantic and accessible structure.
+- **CSS3**: Modern and responsive style, with CSS variables for easy customisation.
+- **JavaScript**: Logic for data management, encryption and dynamic interactions.
+- **Web Crypto API**: Used for secure encryption and decryption.
+- **FontAwesome**: Icons to enhance the user experience.
+
+---
+
+## Licence
+This project is released under the **GNU Affero General Public Licence v3.0**. See the [LICENCE](LICENCE) file for details.
+
+Translated with DeepL.com (free version)
