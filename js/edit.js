@@ -1,7 +1,7 @@
-// Global variables (avoid conflicts with homedit.js)
-let editLoadedData = { passwords: [], cards: [], wallets: [] };
-let editLoadedFile = null;
-let editLoadedFileName = null;
+// Global variables
+let loadedData = { "passwords": [], "cards": [], "wallets": [] };
+let uploadedFile = null;
+let uploadedFileName = null;
 
 // Function to generate a unique ID
 function generateUniqueId() {
@@ -10,18 +10,40 @@ function generateUniqueId() {
     });
 }
 
-// Initialisation on page load
+// Initialization when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    // Event listeners for file input and buttons
+    // Event listeners
     const fileInput = document.getElementById('fileInput');
     if (fileInput) {
         fileInput.addEventListener('change', handleFileUpload);
     }
     const decryptBtn = document.getElementById('decryptBtn');
     if (decryptBtn) {
-        // Remove any existing listeners to avoid conflicts with homedit.js
-        decryptBtn.removeEventListener('click', openFile);
         decryptBtn.addEventListener('click', openFile);
+    }
+    const passwordSearchInput = document.getElementById('passwordSearchInput');
+    if (passwordSearchInput) {
+        passwordSearchInput.addEventListener('input', filterData);
+    }
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterData);
+    }
+    const cardSearchInput = document.getElementById('cardSearchInput');
+    if (cardSearchInput) {
+        cardSearchInput.addEventListener('input', filterData);
+    }
+    const circuitFilter = document.getElementById('circuitFilter');
+    if (circuitFilter) {
+        circuitFilter.addEventListener('change', filterData);
+    }
+    const walletSearchInput = document.getElementById('walletSearchInput');
+    if (walletSearchInput) {
+        walletSearchInput.addEventListener('input', filterData);
+    }
+    const typeFilter = document.getElementById('typeFilter');
+    if (typeFilter) {
+        typeFilter.addEventListener('change', filterData);
     }
     const decryptPassword = document.getElementById('decryptPassword');
     if (decryptPassword) {
@@ -49,9 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addWalletBtn) {
         addWalletBtn.addEventListener('click', addWallet);
     }
+    // Handle section toggling
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => toggleSection('passwordContainer', togglePasswordBtn));
+    }
+    const toggleCardBtn = document.getElementById('toggleCardBtn');
+    if (toggleCardBtn) {
+        toggleCardBtn.addEventListener('click', () => toggleSection('cardContainer', toggleCardBtn));
+    }
+    const toggleWalletBtn = document.getElementById('toggleWalletBtn');
+    if (toggleWalletBtn) {
+        toggleWalletBtn.addEventListener('click', () => toggleSection('walletContainer', toggleWalletBtn));
+    }
+
+    // Handle drag and drop and click for file upload
+    const uploadZone = document.getElementById('uploadZone');
+    if (uploadZone) {
+        uploadZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+        uploadZone.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileUpload({ target: { files: [file] } });
+        });
+        uploadZone.addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.click();
+            }
+        });
+    }
 });
 
-// Handle file upload (triggered by file input or drag-and-drop from homedit.js)
+// Handle file upload
 function handleFileUpload(event) {
     const files = event.target?.files || event.dataTransfer?.files;
     const file = files?.[0];
@@ -67,28 +124,28 @@ function handleFileUpload(event) {
         return;
     }
     
-    editLoadedFileName = file.name;
+    uploadedFileName = file.name;
     const reader = new FileReader();
     
     reader.onerror = () => {
-        showMessage('Error reading file', 'error');
-        editLoadedFile = null;
-        editLoadedFileName = null;
+        showMessage('Error reading the file', 'error');
+        uploadedFile = null;
+        uploadedFileName = null;
         if (event.target) event.target.value = '';
     };
     
     reader.onload = e => {
         try {
-            editLoadedFile = e.target.result;
+            uploadedFile = e.target.result;
             const fileNameElement = document.querySelector('.file-name');
             if (fileNameElement) {
-                fileNameElement.textContent = editLoadedFileName;
+                fileNameElement.textContent = uploadedFileName;
             }
-            showMessage('File uploaded. Click "Open File" to view it.', 'info');
+            showMessage('File uploaded. Press "Open File" to view it.', 'info');
         } catch (error) {
-            showMessage('Error uploading file', 'error');
-            editLoadedFile = null;
-            editLoadedFileName = null;
+            showMessage('Error uploading the file', 'error');
+            uploadedFile = null;
+            uploadedFileName = null;
             if (event.target) event.target.value = '';
         }
     };
@@ -96,9 +153,9 @@ function handleFileUpload(event) {
     reader.readAsText(file);
 }
 
-// Open the uploaded file, with optional decryption
+// Open file
 async function openFile() {
-    if (!editLoadedFile) {
+    if (!uploadedFile) {
         showMessage('Select a valid JSON file first', 'error');
         return;
     }
@@ -114,61 +171,41 @@ async function openFile() {
         let data;
         try {
             data = password ? 
-                await decryptData(editLoadedFile, password) : 
-                JSON.parse(editLoadedFile);
+                await decryptData(uploadedFile, password) : 
+                JSON.parse(uploadedFile);
         } catch (e) {
             throw new Error('Error parsing or decrypting JSON: ' + e.message);
         }
         
         if (!validateJSONStructure(data)) throw new Error('Invalid JSON structure');
         
-        // Initialize missing sections with empty arrays and add unique IDs
-        editLoadedData = {
+        // Initialize missing sections with empty arrays
+        loadedData = {
             passwords: Array.isArray(data.passwords) ? data.passwords : [],
             cards: Array.isArray(data.cards) ? data.cards : [],
             wallets: Array.isArray(data.wallets) ? data.wallets : []
         };
         
-        editLoadedData.passwords.forEach(pwd => {
+        // Add unique IDs if not present
+        loadedData.passwords.forEach(pwd => {
             if (!pwd.id) pwd.id = generateUniqueId();
-            // Rename fields to match edit.js
-            pwd.platform = pwd.piattaforma || pwd.platform || '-';
-            pwd.username = pwd.username || '';
-            pwd.password = pwd.password || '';
-            pwd.url = pwd.url || '';
-            pwd.category = pwd.categoria || pwd.category || '';
-            pwd.note = pwd.nota || pwd.note || '';
         });
-        editLoadedData.cards.forEach(card => {
+        loadedData.cards.forEach(card => {
             if (!card.id) card.id = generateUniqueId();
-            card.issuer = card.ente || card.issuer || 'New Issuer';
-            card.pan = card.pan || '';
-            card.expiryDate = card.dataScadenza || card.expiryDate || '';
-            card.cvv = card.cvv || '';
-            card.pin = card.pin || '';
-            card.note = card.nota || card.note || '';
-            card.network = card.circuito || card.network || '';
         });
-        editLoadedData.wallets.forEach(wallet => {
+        loadedData.wallets.forEach(wallet => {
             if (!wallet.id) wallet.id = generateUniqueId();
-            wallet.wallet = wallet.wallet || 'New Wallet';
-            wallet.user = wallet.utente || wallet.user || '';
-            wallet.password = wallet.password || '';
-            wallet.key = wallet.key || '';
-            wallet.address = wallet.indirizzo || wallet.address || '';
-            wallet.type = wallet.tipologia || wallet.type || '';
-            wallet.note = wallet.nota || wallet.note || '';
         });
         
         sortData();
-        displayData(editLoadedData);
-        populateFilters(editLoadedData);
+        displayData(loadedData);
+        populateFilters(loadedData);
         
         if (document.getElementById('decryptPassword')) {
             document.getElementById('decryptPassword').value = '';
         }
-        editLoadedFile = null;
-        editLoadedFileName = null;
+        uploadedFile = null;
+        uploadedFileName = null;
         if (document.getElementById('fileInput')) {
             document.getElementById('fileInput').value = '';
         }
@@ -179,7 +216,7 @@ async function openFile() {
         
         showMessage('File opened successfully!', 'success');
     } catch (error) {
-        console.error('Error opening file:', error);
+        console.error('File opening error:', error);
         showMessage(password ? 
             'Incorrect password or corrupted file' : 
             'Invalid file. If encrypted, enter the password', 'error');
@@ -189,6 +226,42 @@ async function openFile() {
             btn.innerHTML = '<i class="fas fa-unlock"></i> Open File';
         }
     }
+}
+
+// Validate JSON structure
+function validateJSONStructure(data) {
+    // Check that data is an object and each section, if present, is an array
+    return data && typeof data === 'object' &&
+           (data.passwords === undefined || Array.isArray(data.passwords)) &&
+           (data.cards === undefined || Array.isArray(data.cards)) &&
+           (data.wallets === undefined || Array.isArray(data.wallets));
+}
+
+// Sort data
+function sortData() {
+    if (!loadedData) return;
+    loadedData.passwords.sort((a, b) => a.platform.localeCompare(b.platform, 'en', { sensitivity: 'base' }));
+    loadedData.cards?.sort((a, b) => a.issuer.localeCompare(b.issuer, 'en', { sensitivity: 'base' }));
+    loadedData.wallets.sort((a, b) => a.wallet.localeCompare(b.wallet, 'en', { sensitivity: 'base' }));
+}
+
+// Function to handle section toggling
+function toggleSection(containerId, button) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        const isHidden = container.classList.contains('hidden');
+        container.classList.toggle('hidden');
+        button.innerHTML = isHidden ? 
+            `<i class="fas fa-eye-slash"></i> Hide ${containerId.replace('Container', '')}` :
+            `<i class="fas fa-eye"></i> Show ${containerId.replace('Container', '')}`;
+    }
+}
+
+// Display all data
+function displayData(data) {
+    displayPasswords(data.passwords);
+    displayCards(data.cards || []);
+    displayWallets(data.wallets);
 }
 
 // Display passwords
@@ -241,15 +314,15 @@ function displayPasswords(passwords) {
                 </div>
             </div>
             <div class="field-container">
-                <label class="field-label">Note</label>
+                <label class="field-label">Notes</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.note || '-')}" data-field="note" data-id="${pwd.id}" data-type="password" data-note="true">${pwd.note ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(pwd.notes || '-')}" data-field="notes" data-id="${pwd.id}" data-type="password" data-notes="true">${pwd.notes ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Note')">
+                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Notes')">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
@@ -336,7 +409,7 @@ function displayCards(cards) {
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'CVV')">
+                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'CVV/CVC2')">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
@@ -356,15 +429,15 @@ function displayCards(cards) {
                 </div>
             </div>
             <div class="field-container">
-                <label class="field-label">Note</label>
+                <label class="field-label">Notes</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.note || '-')}" data-field="note" data-id="${card.id}" data-type="card" data-note="true">${card.note ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(card.notes || '-')}" data-field="notes" data-id="${card.id}" data-type="card" data-notes="true">${card.notes ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Note')">
+                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Notes')">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
@@ -404,20 +477,20 @@ function displayWallets(wallets) {
     }
     
     wallets.forEach((wallet, index) => {
-        const walletElement = document.createElement('div');
-        walletElement.className = 'preview-card-item';
-        walletElement.innerHTML = `
+        const card = document.createElement('div');
+        card.className = 'preview-card-item';
+        card.innerHTML = `
             <h3 class="editable-field scrollable-text" data-value="${escapeHtml(wallet.wallet)}" data-field="wallet" data-id="${wallet.id}" data-type="wallet">${escapeHtml(wallet.wallet)}</h3>
             <div class="field-container">
-                <label class="field-label">User</label>
+                <label class="field-label">Username</label>
                 <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.user)}" data-field="user" data-id="${wallet.id}" data-type="wallet">••••••••••••</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.username)}" data-field="username" data-id="${wallet.id}" data-type="wallet">••••••••••••</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'User')">
+                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Username')">
                         <i class="fas fa-copy"></i>
                     </button>
                 </div>
@@ -465,23 +538,23 @@ function displayWallets(wallets) {
                 </div>
             </div>
             <div class="field-container">
-                <label class="field-label">Type</label>
+                <label class="field-label">Notes</label>
                 <div class="content-wrapper">
-                    <span class="editable-field scrollable-text" data-value="${escapeHtml(wallet.type || '-')}" data-field="type" data-id="${wallet.id}" data-type="wallet">${escapeHtml(wallet.type || '-')}</span>
-                </div>
-            </div>
-            <div class="field-container">
-                <label class="field-label">Note</label>
-                <div class="content-wrapper">
-                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.note || '-')}" data-field="note" data-id="${wallet.id}" data-type="wallet" data-note="true">${wallet.note ? '••••••••••••' : '-'}</span>
+                    <span class="editable-field hidden-content scrollable-text" data-value="${escapeHtml(wallet.notes || '-')}" data-field="notes" data-id="${wallet.id}" data-type="wallet" data-notes="true">${wallet.notes ? '••••••••••••' : '-'}</span>
                 </div>
                 <div class="button-group">
                     <button class="btn btn-icon toggle-password" onclick="toggleVisibility(this)">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Note')">
+                    <button class="btn btn-icon copy-btn" onclick="copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, 'Notes')">
                         <i class="fas fa-copy"></i>
                     </button>
+                </div>
+            </div>
+            <div class="field-container">
+                <label class="field-label">Type</label>
+                <div class="content-wrapper">
+                    <span class="editable-field scrollable-text" data-value="${escapeHtml(wallet.type || '-')}" data-field="type" data-id="${wallet.id}" data-type="wallet">${escapeHtml(wallet.type || '-')}</span>
                 </div>
             </div>
             <div class="btn-container">
@@ -490,124 +563,175 @@ function displayWallets(wallets) {
                 </button>
             </div>
         `;
-        container.appendChild(walletElement);
+        container.appendChild(card);
     });
 
     addEditableEventListeners();
 }
 
-// Add event listeners for editable fields
+// Add event listeners to all editable fields
 function addEditableEventListeners() {
-    const editableFields = document.querySelectorAll('.editable-field');
-    editableFields.forEach(field => {
-        field.addEventListener('click', () => {
-            const value = field.dataset.value;
-            const id = field.dataset.id;
-            const type = field.dataset.type;
-            const fieldName = field.dataset.field;
-            const parent = field.closest('.field-container') || field.parentElement;
-            const label = parent?.querySelector('.field-label') || null;
-
-            // Create input field
-            const input = document.createElement('input');
-            input.type = fieldName === 'password' || fieldName === 'cvv' || fieldName === 'pin' || fieldName === 'key' ? 'password' : 'text';
-            input.className = 'input-field scrollable-text';
-            input.value = value !== '-' ? value : '';
-
-            // Create buttons
-            const saveButton = document.createElement('button');
-            saveButton.className = 'btn btn-icon';
-            saveButton.innerHTML = '<i class="fas fa-save"></i>';
-            saveButton.addEventListener('click', () => saveEdit(field, parent, input.value, fieldName, id, type, label));
-
-            const cancelButton = document.createElement('button');
-            cancelButton.className = 'btn btn-icon';
-            cancelButton.innerHTML = '<i class="fas fa-times"></i>';
-            cancelButton.addEventListener('click', () => cancelEdit(field, parent, value, fieldName, id, type, label));
-
-            // Create button group
-            const buttonGroup = document.createElement('div');
-            buttonGroup.className = 'button-group';
-            buttonGroup.appendChild(saveButton);
-            buttonGroup.appendChild(cancelButton);
-
-            // Create content wrapper for input
-            const contentWrapper = document.createElement('div');
-            contentWrapper.className = 'content-wrapper';
-            contentWrapper.appendChild(input);
-
-            // Rebuild parent structure
-            parent.innerHTML = '';
-            if (label) parent.appendChild(label);
-            parent.appendChild(contentWrapper);
-            parent.appendChild(buttonGroup);
-            input.focus();
-
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    saveEdit(field, parent, input.value, fieldName, id, type, label);
-                }
-            });
-        });
+    document.querySelectorAll('.editable-field').forEach(field => {
+        field.removeEventListener('click', handleFieldEdit);
+        field.addEventListener('click', handleFieldEdit);
     });
 }
 
-// Save edit
-function saveEdit(originalElement, container, newValue, field, id, type, label) {
-    const isSensitive = field === 'username' || field === 'password' || field === 'note' ||
-                        field === 'pan' || field === 'expiryDate' ||
-                        field === 'cvv' || field === 'pin' || field === 'user' ||
-                        field === 'key' || field === 'address';
+// Handle field editing with confirmation
+function handleFieldEdit(event) {
+    const element = event.target;
+    if (element.tagName !== 'SPAN' && element.tagName !== 'A' && element.tagName !== 'H3') return;
 
-    let newElement;
+    const value = element.dataset.value;
+    const field = element.dataset.field;
+    const id = element.dataset.id;
+    const type = element.dataset.type;
+
+    // Create container for input and buttons
+    const container = document.createElement('div');
+    container.className = 'edit-field-container';
+
+    // Create input
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = value === '-' ? '' : value;
+    input.className = 'input-field';
+    container.appendChild(input);
+
+    // Create Confirm and Cancel buttons
+    const buttonGroup = document.createElement('div');
+    buttonGroup.className = 'button-group edit-buttons';
+    const confirmBtn = document.createElement('button');
+    confirmBtn.className = 'btn btn-primary btn-icon';
+    confirmBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i>';
+    confirmBtn.title = 'Confirm edit';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn btn-secondary btn-icon';
+    cancelBtn.innerHTML = '<i class="fas fa-times"></i>';
+    cancelBtn.title = 'Cancel';
+    buttonGroup.appendChild(confirmBtn);
+    buttonGroup.appendChild(cancelBtn);
+    container.appendChild(buttonGroup);
+
+    // Handle confirmation with modal
+    confirmBtn.addEventListener('click', () => {
+        const newValue = input.value.trim();
+        
+        // Show confirmation modal
+        showEditConfirmationModal(value, newValue, () => {
+            applyEdit(element, container, newValue, field, id, type);
+        }, () => {
+            cancelEdit(element, container, value, field, id, type);
+        });
+    });
+
+    // Handle cancellation
+    cancelBtn.addEventListener('click', () => {
+        cancelEdit(element, container, value, field, id, type);
+    });
+
+    // Handle keyboard input
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            confirmBtn.click();
+        } else if (e.key === 'Escape') {
+            cancelBtn.click();
+        }
+    });
+
+    // Replace the element with the container
+    element.replaceWith(container);
+    input.focus();
+    input.select();
+}
+
+// Show edit confirmation modal
+function showEditConfirmationModal(oldValue, newValue, onConfirm, onCancel) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const title = document.createElement('h3');
+    title.textContent = 'Confirm Edit';
+    modalContent.appendChild(title);
+    
+    const message = document.createElement('p');
+    message.innerHTML = `Do you want to save this change?<br><br><strong>From:</strong> ${escapeHtml(oldValue || '-')}<br><strong>To:</strong> ${escapeHtml(newValue || '-')}`;
+    modalContent.appendChild(message);
+    
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'btn-container';
+    
+    const confirmBtnModal = document.createElement('button');
+    confirmBtnModal.className = 'btn btn-primary';
+    confirmBtnModal.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
+    
+    const cancelBtnModal = document.createElement('button');
+    cancelBtnModal.className = 'btn btn-secondary';
+    cancelBtnModal.innerHTML = '<i class="fas fa-times"></i> Cancel';
+    
+    btnContainer.appendChild(confirmBtnModal);
+    btnContainer.appendChild(cancelBtnModal);
+    modalContent.appendChild(btnContainer);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    confirmBtnModal.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        onConfirm();
+    });
+    
+    cancelBtnModal.addEventListener('click', () => {
+        document.body.removeChild(modal);
+        onCancel();
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+            onCancel();
+        }
+    });
+}
+
+// Apply the edit to the field
+function applyEdit(originalElement, container, newValue, field, id, type) {
+    const isSensitive = field === 'username' || field === 'password' || field === 'notes' || 
+                       field === 'pan' || field === 'expiryDate' || 
+                       field === 'cvv' || field === 'pin' || field === 'username' || 
+                       field === 'key' || field === 'address';
+    
     if (field === 'url') {
-        newElement = document.createElement('a');
+        const newElement = document.createElement('a');
         newElement.href = newValue || '#';
         newElement.className = 'editable-field url-field scrollable-text';
+        newElement.dataset.value = newValue || '-';
+        newElement.dataset.field = field;
+        newElement.dataset.id = id;
+        newElement.dataset.type = type;
+        newElement.textContent = newValue || '-';
         newElement.target = '_blank';
         newElement.rel = 'noopener noreferrer';
+        container.replaceWith(newElement);
     } else {
         const tagName = originalElement.tagName === 'H3' ? 'h3' : 'span';
-        newElement = document.createElement(tagName);
+        const newElement = document.createElement(tagName);
+        newElement.textContent = isSensitive && newValue ? '••••••••••••' : (newValue || '-');
+        newElement.dataset.value = newValue || '-';
+        newElement.dataset.field = field;
+        newElement.dataset.id = id;
+        newElement.dataset.type = type;
         newElement.className = `editable-field scrollable-text${isSensitive ? ' hidden-content' : ''}${field === 'url' ? ' url-field' : ''}`;
+        if (isSensitive && (field === 'notes' || field === 'key' || field === 'address')) {
+            newElement.dataset[field] = 'true';
+        }
+        container.replaceWith(newElement);
     }
 
-    newElement.textContent = isSensitive && newValue !== '-' ? '••••••••••••' : (newValue || '-');
-    newElement.dataset.value = newValue || '-';
-    newElement.dataset.field = field;
-    newElement.dataset.id = id;
-    newElement.dataset.type = type;
-    if (isSensitive && (field === 'note' || field === 'key' || field === 'address')) {
-        newElement.dataset[field] = 'true';
-    }
-
-    // Rebuild field container
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'content-wrapper';
-    contentWrapper.appendChild(newElement);
-
-    const buttonGroup = document.createElement('div');
-    buttonGroup.className = 'button-group';
-    if (isSensitive) {
-        const toggleButton = document.createElement('button');
-        toggleButton.className = 'btn btn-icon toggle-password';
-        toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-        toggleButton.setAttribute('onclick', 'toggleVisibility(this)');
-        buttonGroup.appendChild(toggleButton);
-
-        const copyButton = document.createElement('button');
-        copyButton.className = 'btn btn-icon copy-btn';
-        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-        copyButton.setAttribute('onclick', `copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, '${field.charAt(0).toUpperCase() + field.slice(1)}')`);
-        buttonGroup.appendChild(copyButton);
-    }
-
-    container.innerHTML = '';
-    if (label) container.appendChild(label);
-    container.appendChild(contentWrapper);
-    if (isSensitive) container.appendChild(buttonGroup);
-
-    // Update data
+    // Update the data
     if (type === 'password') {
         editPassword(id, field, newValue);
     } else if (type === 'card') {
@@ -620,62 +744,66 @@ function saveEdit(originalElement, container, newValue, field, id, type, label) 
     showMessage('Edit saved successfully!', 'success');
 }
 
-// Cancel edit
-function cancelEdit(originalElement, container, value, field, id, type, label) {
-    const isSensitive = field === 'username' || field === 'password' || field === 'note' ||
-                        field === 'pan' || field === 'expiryDate' ||
-                        field === 'cvv' || field === 'pin' || field === 'user' ||
-                        field === 'key' || field === 'address';
-
-    let newElement;
+// Cancel the edit
+function cancelEdit(originalElement, container, value, field, id, type) {
     if (field === 'url') {
-        newElement = document.createElement('a');
+        const newElement = document.createElement('a');
         newElement.href = value || '#';
         newElement.className = 'editable-field url-field scrollable-text';
+        newElement.dataset.value = value || '-';
+        newElement.dataset.field = field;
+        newElement.dataset.id = id;
+        newElement.dataset.type = type;
+        newElement.textContent = value || '-';
         newElement.target = '_blank';
         newElement.rel = 'noopener noreferrer';
+        container.replaceWith(newElement);
     } else {
         const tagName = originalElement.tagName === 'H3' ? 'h3' : 'span';
-        newElement = document.createElement(tagName);
+        const newElement = document.createElement(tagName);
+        const isSensitive = field === 'username' || field === 'password' || field === 'notes' || 
+                            field === 'pan' || field === 'expiryDate' || 
+                            field === 'cvv' || field === 'pin' || field === 'username' || 
+                            field === 'key' || field === 'address';
+        newElement.textContent = isSensitive && value !== '-' ? '••••••••••••' : (value || '-');
+        newElement.dataset.value = value || '-';
+        newElement.dataset.field = field;
+        newElement.dataset.id = id;
+        newElement.dataset.type = type;
         newElement.className = `editable-field scrollable-text${isSensitive ? ' hidden-content' : ''}${field === 'url' ? ' url-field' : ''}`;
+        if (isSensitive && (field === 'notes' || field === 'key' || field === 'address')) {
+            newElement.dataset[field] = 'true';
+        }
+        container.replaceWith(newElement);
     }
-
-    newElement.textContent = isSensitive && value !== '-' ? '••••••••••••' : (value || '-');
-    newElement.dataset.value = value || '-';
-    newElement.dataset.field = field;
-    newElement.dataset.id = id;
-    newElement.dataset.type = type;
-    if (isSensitive && (field === 'note' || field === 'key' || field === 'address')) {
-        newElement.dataset[field] = 'true';
-    }
-
-    // Rebuild field container
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'content-wrapper';
-    contentWrapper.appendChild(newElement);
-
-    const buttonGroup = document.createElement('div');
-    buttonGroup.className = 'button-group';
-    if (isSensitive) {
-        const toggleButton = document.createElement('button');
-        toggleButton.className = 'btn btn-icon toggle-password';
-        toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-        toggleButton.setAttribute('onclick', 'toggleVisibility(this)');
-        buttonGroup.appendChild(toggleButton);
-
-        const copyButton = document.createElement('button');
-        copyButton.className = 'btn btn-icon copy-btn';
-        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-        copyButton.setAttribute('onclick', `copyToClipboard(this.closest('.field-container').querySelector('.editable-field').dataset.value, '${field.charAt(0).toUpperCase() + field.slice(1)}')`);
-        buttonGroup.appendChild(copyButton);
-    }
-
-    container.innerHTML = '';
-    if (label) container.appendChild(label);
-    container.appendChild(contentWrapper);
-    if (isSensitive) container.appendChild(buttonGroup);
 
     addEditableEventListeners();
+}
+
+// Handle hidden content
+function toggleVisibility(button) {
+    const parent = button.closest('.field-container');
+    const span = parent?.querySelector('.hidden-content');
+    if (!span) return;
+
+    const value = span.dataset.value;
+    const isHidden = span.textContent === '••••••••••••' || span.textContent === '-';
+    
+    if (isHidden && value !== '-') {
+        span.textContent = value;
+        button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        span.textContent = value && value !== '-' ? '••••••••••••' : '-';
+        button.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+
+// Copy to clipboard
+function copyToClipboard(text, type) {
+    if (text === '-') return;
+    navigator.clipboard.writeText(text)
+        .then(() => showMessage(`${type} copied to clipboard!`, 'success'))
+        .catch(() => showMessage('Error during copying', 'error'));
 }
 
 // Add password
@@ -687,18 +815,18 @@ function addPassword() {
         password: generateRandomPassword(),
         url: '',
         category: '',
-        note: ''
+        notes: ''
     };
-    editLoadedData.passwords.push(newPassword);
+    loadedData.passwords.push(newPassword);
     sortData();
-    displayData(editLoadedData);
-    populateFilters(editLoadedData);
+    displayData(loadedData);
+    populateFilters(loadedData);
     showMessage('New password added! Click on fields to edit them.', 'success');
 }
 
 // Add card
 function addCard() {
-    if (!editLoadedData.cards) editLoadedData.cards = [];
+    if (!loadedData.cards) loadedData.cards = [];
     const newCard = {
         id: generateUniqueId(),
         issuer: 'New Issuer',
@@ -706,13 +834,13 @@ function addCard() {
         expiryDate: '',
         cvv: '',
         pin: '',
-        note: '',
+        notes: '',
         network: ''
     };
-    editLoadedData.cards.push(newCard);
+    loadedData.cards.push(newCard);
     sortData();
-    displayData(editLoadedData);
-    populateFilters(editLoadedData);
+    displayData(loadedData);
+    populateFilters(loadedData);
     showMessage('New card added! Click on fields to edit them.', 'success');
 }
 
@@ -721,52 +849,52 @@ function addWallet() {
     const newWallet = {
         id: generateUniqueId(),
         wallet: 'New Wallet',
-        user: '',
+        username: '',
         password: generateRandomPassword(),
         key: '',
         address: '',
         type: '',
-        note: ''
+        notes: ''
     };
-    editLoadedData.wallets.push(newWallet);
+    loadedData.wallets.push(newWallet);
     sortData();
-    displayData(editLoadedData);
-    populateFilters(editLoadedData);
+    displayData(loadedData);
+    populateFilters(loadedData);
     showMessage('New wallet added! Click on fields to edit them.', 'success');
 }
 
 // Edit password
 function editPassword(id, field, value) {
-    const password = editLoadedData.passwords.find(pwd => pwd.id === id);
+    const password = loadedData.passwords.find(pwd => pwd.id === id);
     if (password) {
         password[field] = value;
-        populateFilters(editLoadedData);
+        populateFilters(loadedData);
         sortData();
-        displayData(editLoadedData);
+        displayData(loadedData);
     }
 }
 
 // Edit card
 function editCard(id, field, value) {
-    if (editLoadedData.cards) {
-        const card = editLoadedData.cards.find(card => card.id === id);
+    if (loadedData.cards) {
+        const card = loadedData.cards.find(card => card.id === id);
         if (card) {
             card[field] = value;
-            populateFilters(editLoadedData);
+            populateFilters(loadedData);
             sortData();
-            displayData(editLoadedData);
+            displayData(loadedData);
         }
     }
 }
 
 // Edit wallet
 function editWallet(id, field, value) {
-    const wallet = editLoadedData.wallets.find(wallet => wallet.id === id);
+    const wallet = loadedData.wallets.find(wallet => wallet.id === id);
     if (wallet) {
         wallet[field] = value;
-        populateFilters(editLoadedData);
+        populateFilters(loadedData);
         sortData();
-        displayData(editLoadedData);
+        displayData(loadedData);
     }
 }
 
@@ -774,13 +902,13 @@ function editWallet(id, field, value) {
 function showDeleteModal(id, type) {
     let itemName = '';
     if (type === 'password') {
-        const pwd = editLoadedData.passwords.find(pwd => pwd.id === id);
+        const pwd = loadedData.passwords.find(pwd => pwd.id === id);
         itemName = pwd?.platform || 'Password';
     } else if (type === 'card') {
-        const card = editLoadedData.cards.find(card => card.id === id);
+        const card = loadedData.cards.find(card => card.id === id);
         itemName = card?.issuer || 'Card';
     } else if (type === 'wallet') {
-        const wallet = editLoadedData.wallets.find(wallet => wallet.id === id);
+        const wallet = loadedData.wallets.find(wallet => wallet.id === id);
         itemName = wallet?.wallet || 'Wallet';
     }
 
@@ -818,17 +946,17 @@ function showDeleteModal(id, type) {
 
     confirmBtn.addEventListener('click', () => {
         if (type === 'password') {
-            editLoadedData.passwords = editLoadedData.passwords.filter(pwd => pwd.id !== id);
+            loadedData.passwords = loadedData.passwords.filter(pwd => pwd.id !== id);
             showMessage('Password deleted successfully!', 'success');
         } else if (type === 'card') {
-            editLoadedData.cards = editLoadedData.cards.filter(card => card.id !== id);
+            loadedData.cards = loadedData.cards.filter(card => card.id !== id);
             showMessage('Card deleted successfully!', 'success');
         } else if (type === 'wallet') {
-            editLoadedData.wallets = editLoadedData.wallets.filter(wallet => wallet.id !== id);
+            loadedData.wallets = loadedData.wallets.filter(wallet => wallet.id !== id);
             showMessage('Wallet deleted successfully!', 'success');
         }
-        displayData(editLoadedData);
-        populateFilters(editLoadedData);
+        displayData(loadedData);
+        populateFilters(loadedData);
         document.body.removeChild(modal);
     });
 
@@ -843,9 +971,146 @@ function showDeleteModal(id, type) {
     });
 }
 
+// Filter data
+function filterData() {
+    const passwordSearchInput = document.getElementById('passwordSearchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const cardSearchInput = document.getElementById('cardSearchInput');
+    const circuitFilter = document.getElementById('circuitFilter');
+    const walletSearchInput = document.getElementById('walletSearchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    
+    if (!passwordSearchInput || !categoryFilter || !cardSearchInput || !circuitFilter || !walletSearchInput || !typeFilter) return;
+    
+    const passwordSearch = passwordSearchInput.value.toLowerCase();
+    const category = categoryFilter.value.toLowerCase();
+    const cardSearch = cardSearchInput.value.toLowerCase();
+    const circuit = circuitFilter.value.toLowerCase();
+    const walletSearch = walletSearchInput.value.toLowerCase();
+    const type = typeFilter.value.toLowerCase();
+    
+    // Filter passwords
+    const filteredPasswords = loadedData.passwords.filter(pwd => {
+        const searchMatch = !passwordSearch || 
+            pwd.platform.toLowerCase().includes(passwordSearch) ||
+            pwd.username.toLowerCase().includes(passwordSearch) ||
+            pwd.password.toLowerCase().includes(passwordSearch) ||
+            (pwd.url && pwd.url.toLowerCase().includes(passwordSearch)) ||
+            (pwd.notes && pwd.notes.toLowerCase().includes(passwordSearch)) ||
+            (pwd.category && pwd.category.toLowerCase().includes(passwordSearch));
+        
+        const categoryMatch = !category || 
+            (pwd.category && pwd.category.toLowerCase() === category);
+        
+        return searchMatch && categoryMatch;
+    }).sort((a, b) => a.platform.localeCompare(b.platform, 'en', { sensitivity: 'base' }));
+    
+    // Filter cards
+    const filteredCards = (loadedData.cards || []).filter(card => {
+        const searchMatch = !cardSearch || 
+            card.issuer.toLowerCase().includes(cardSearch) ||
+            card.pan.toLowerCase().includes(cardSearch) ||
+            card.expiryDate.toLowerCase().includes(cardSearch) ||
+            card.cvv.toLowerCase().includes(cardSearch) ||
+            card.pin.toLowerCase().includes(cardSearch) ||
+            (card.network && card.network.toLowerCase().includes(cardSearch)) ||
+            (card.notes && card.notes.toLowerCase().includes(cardSearch));
+        
+        const circuitMatch = !circuit || 
+            (card.network && card.network.toLowerCase() === circuit);
+        
+        return searchMatch && circuitMatch;
+    }).sort((a, b) => a.issuer.localeCompare(b.issuer, 'en', { sensitivity: 'base' }));
+    
+    // Filter wallets
+    const filteredWallets = loadedData.wallets.filter(wallet => {
+        const searchMatch = !walletSearch || 
+            wallet.wallet.toLowerCase().includes(walletSearch) ||
+            (wallet.username && wallet.username.toLowerCase().includes(walletSearch)) ||
+            wallet.password.toLowerCase().includes(walletSearch) ||
+            (wallet.key && wallet.key.toLowerCase().includes(walletSearch)) ||
+            (wallet.address && wallet.address.toLowerCase().includes(walletSearch)) ||
+            (wallet.type && wallet.type.toLowerCase().includes(walletSearch)) ||
+            (wallet.notes && wallet.notes.toLowerCase().includes(walletSearch));
+        
+        const typeMatch = !type || 
+            (wallet.type && wallet.type.toLowerCase() === type);
+        
+        return searchMatch && typeMatch;
+    }).sort((a, b) => a.wallet.localeCompare(b.wallet, 'en', { sensitivity: 'base' }));
+    
+    displayPasswords(filteredPasswords);
+    displayCards(filteredCards);
+    displayWallets(filteredWallets);
+}
+
+// Populate all filters
+function populateFilters(data) {
+    populateCategoryFilter(data);
+    populateCircuitFilter(data);
+    populateTypeFilter(data);
+}
+
+// Populate category filter for passwords
+function populateCategoryFilter(data) {
+    const select = document.getElementById('categoryFilter');
+    if (!select) return;
+    
+    const categories = new Set();
+    data.passwords.forEach(pwd => {
+        if (pwd.category) categories.add(pwd.category);
+    });
+    
+    select.innerHTML = '<option value="">All categories</option>';
+    Array.from(categories).sort().forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+    });
+}
+
+// Populate network filter for cards
+function populateCircuitFilter(data) {
+    const select = document.getElementById('circuitFilter');
+    if (!select) return;
+    
+    const networks = new Set();
+    (data.cards || []).forEach(card => {
+        if (card.network) networks.add(card.network);
+    });
+    
+    select.innerHTML = '<option value="">All networks</option>';
+    Array.from(networks).sort().forEach(circ => {
+        const option = document.createElement('option');
+        option.value = circ;
+        option.textContent = circ;
+        select.appendChild(option);
+    });
+}
+
+// Populate type filter for wallets
+function populateTypeFilter(data) {
+    const select = document.getElementById('typeFilter');
+    if (!select) return;
+    
+    const types = new Set();
+    data.wallets.forEach(wallet => {
+        if (wallet.type) types.add(wallet.type);
+    });
+    
+    select.innerHTML = '<option value="">All types</option>';
+    Array.from(types).sort().forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        select.appendChild(option);
+    });
+}
+
 // Download file
 async function downloadFile(encrypted) {
-    if (!editLoadedData) {
+    if (!loadedData) {
         showMessage('No data to save', 'error');
         return;
     }
@@ -853,7 +1118,7 @@ async function downloadFile(encrypted) {
     const password = document.getElementById('encryptPassword')?.value || '';
     
     if (encrypted && password.length < 8) {
-        showMessage('The password must be at least 8 characters long', 'error');
+        showMessage('Password must be at least 8 characters', 'error');
         return;
     }
     
@@ -861,9 +1126,9 @@ async function downloadFile(encrypted) {
         let content;
         if (encrypted) {
             showMessage('Encrypting...', 'info');
-            content = await encryptData(editLoadedData, password);
+            content = await encryptData(loadedData, password);
         } else {
-            content = JSON.stringify(editLoadedData, null, 2);
+            content = JSON.stringify(loadedData, null, 2);
         }
         
         const blob = new Blob([content], { type: 'application/json' });
@@ -878,7 +1143,7 @@ async function downloadFile(encrypted) {
         
         showMessage('File downloaded successfully!', 'success');
     } catch (error) {
-        console.error('Error saving:', error);
+        console.error('Saving error:', error);
         showMessage('Error during saving: ' + error.message, 'error');
     }
 }
@@ -894,4 +1159,42 @@ function generateRandomPassword(length = 16) {
         password += characters[array[i] % characters.length];
     }
     return password;
+}
+
+// Utility to show toast messages
+function showMessage(text, type) {
+    const oldMessage = document.querySelector('.toast-message');
+    if (oldMessage) oldMessage.remove();
+    
+    const message = document.createElement('div');
+    message.className = `toast-message toast-${type}`;
+    message.textContent = text;
+    message.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background: ${type === 'success' ? 'var(--success)' : 
+                     type === 'error' ? 'var(--danger)' : 
+                     'var(--primary-color)'};
+        color: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    document.body.appendChild(message);
+    setTimeout(() => {
+        message.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => message.remove(), 300);
+    }, 3000);
+}
+
+// Utility to escape HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
