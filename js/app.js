@@ -13,37 +13,41 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const installButton = document.getElementById('install-button');
+  if (installButton) {
+    installButton.disabled = true;
+    installButton.addEventListener('click', () => {
+      console.log('Install button clicked, userAgent:', navigator.userAgent);
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream) {
+        showMessage('To install Beskytter™, tap the Share button and select "Add to Home Screen".', 'info');
+      } else if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          console.log('Prompt outcome:', choiceResult.outcome);
+          deferredPrompt = null;
+        });
+      } else {
+        console.warn('Install prompt not available');
+        showMessage('Installation is not available at this moment.', 'info');
+      }
+    });
+  } else {
+    console.error('Install button not found in DOM');
+  }
+});
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   const installButton = document.getElementById('install-button');
   if (installButton) {
     installButton.disabled = false;
-    installButton.addEventListener('click', () => {
-      console.log('Install button clicked');
-      if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-        showMessage('To install Beskytter™, tap the Share button and select "Add to Home Screen".', 'info');
-      } else {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          } else {
-            console.log('User dismissed the install prompt');
-          }
-          deferredPrompt = null;
-        });
-      }
-    });
+    console.log('beforeinstallprompt fired');
   } else {
-    console.warn('Install button not found');
+    console.error('Install button not found during beforeinstallprompt');
   }
 });
-
-const installButton = document.getElementById('install-button');
-if (installButton) {
-  installButton.disabled = true;
-}
 
 window.addEventListener('appinstalled', () => {
   console.log('PWA installed');
