@@ -1,28 +1,28 @@
-// sw.js
 const CACHE_NAME = 'beskytter-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/edit.html',
-  '/privacy-policy.html',
-  '/cookie-policy.html',
-  '/info.html',
-  '/informazioni.html',
-  '/css/style.css',
-  '/css/policy.css',
-  '/js/crypto.js',
-  '/js/edit.js',
-  '/js/home.js',
-  '/js/info.js',
-  '/js/app.js',
-  '/js/utils.js',
-  '/assets/apple-touch-icon.png',
-  '/assets/beskytter-logo.png',
-  '/assets/favicon-96x96.png',
-  '/assets/favicon.ico',
-  '/assets/favicon.svg',
-  '/assets/web-app-manifest-192x192.png',
-  '/assets/web-app-manifest-512x512.png',
+  '/Beskytter/',
+  '/Beskytter/index.html',
+  '/Beskytter/edit.html',
+  '/Beskytter/privacy-policy.html',
+  '/Beskytter/cookie-policy.html',
+  '/Beskytter/info.html',
+  '/Beskytter/informazioni.html',
+  '/Beskytter/css/style.css',
+  '/Beskytter/css/policy.css',
+  '/Beskytter/js/crypto.js',
+  '/Beskytter/js/edit.js',
+  '/Beskytter/js/home.js',
+  '/Beskytter/js/info.js',
+  '/Beskytter/js/app.js',
+  '/Beskytter/js/utils.js',
+  '/Beskytter/assets/apple-touch-icon.png',
+  '/Beskytter/assets/beskytter-logo.png',
+  '/Beskytter/assets/favicon-96x96.png',
+  '/Beskytter/assets/favicon.ico',
+  '/Beskytter/assets/favicon.svg',
+  '/Beskytter/assets/site.webmanifest',
+  '/Beskytter/assets/web-app-manifest-192x192.png',
+  '/Beskytter/assets/web-app-manifest-512x512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2'
@@ -31,13 +31,8 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Cache opened');
-        return cache.addAll(urlsToCache);
-      })
-      .catch(error => {
-        console.error('Cache failed:', error);
-      })
+      .then(cache => cache.addAll(urlsToCache))
+      .catch(error => console.error('Cache failed:', error))
   );
   self.skipWaiting();
 });
@@ -45,12 +40,8 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
-      })
-      .catch(() => {
-        return caches.match('/index.html');
-      })
+      .then(response => response || fetch(event.request))
+      .catch(() => caches.match('/Beskytter/index.html'))
   );
 });
 
