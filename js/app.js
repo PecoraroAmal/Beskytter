@@ -10,6 +10,12 @@ if ('serviceWorker' in navigator) {
       .catch(error => {
         console.error('Service Worker registration failed:', error);
       });
+    fetch('/manifest.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load manifest.json');
+        console.log('Manifest loaded successfully');
+      })
+      .catch(error => console.error('Manifest load error:', error));
   });
 }
 
