@@ -2,6 +2,7 @@ let deferredPrompt;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    console.log('Attempting to register Service Worker');
     navigator.serviceWorker.register('/Beskytter/sw.js', { scope: '/Beskytter/' })
       .then(registration => {
         console.log('Service Worker registered:', registration);
@@ -10,6 +11,7 @@ if ('serviceWorker' in navigator) {
       .catch(error => {
         console.error('Service Worker registration failed:', error);
       });
+    console.log('Fetching manifest.json');
     fetch('/Beskytter/manifest.json')
       .then(response => {
         if (!response.ok) throw new Error('Unable to load manifest.json');
@@ -22,6 +24,7 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', () => {
   const installButton = document.getElementById('install-app');
   if (installButton) {
+    console.log('Install button found in DOM');
     installButton.disabled = true;
     installButton.addEventListener('click', () => {
       console.log('Install button clicked, userAgent:', navigator.userAgent);
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isIOS) {
         showMessage('To install Beskytter™, follow the iOS instructions below.', 'info');
       } else if (deferredPrompt) {
+        console.log('Showing install prompt');
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           console.log('Prompt outcome:', choiceResult.outcome);
