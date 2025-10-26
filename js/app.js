@@ -12,26 +12,22 @@ if ('serviceWorker' in navigator) {
       });
     fetch('/Beskytter/manifest.json')
       .then(response => {
-        if (!response.ok) throw new Error('Failed to load manifest.json');
+        if (!response.ok) throw new Error('Unable to load manifest.json');
         console.log('Manifest loaded successfully');
       })
-      .catch(error => console.error('Manifest load error:', error));
+      .catch(error => console.error('Error loading manifest:', error));
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const installButton = document.getElementById('install-button');
+  const installButton = document.getElementById('install-app');
   if (installButton) {
     installButton.disabled = true;
-    installButton.addEventListener('click', (e) => {
-      e.preventDefault();
+    installButton.addEventListener('click', () => {
       console.log('Install button clicked, userAgent:', navigator.userAgent);
-      
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      
       if (isIOS) {
-        showMessage('To install Beskytter™, tap the Share button and select "Add to Home Screen".', 'info');
+        showMessage('To install Beskytter™, follow the iOS instructions below.', 'info');
       } else if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
@@ -44,19 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
           deferredPrompt = null;
         });
       } else {
-        console.warn('Install prompt not available - showing manual instructions');
+        console.warn('Install prompt not available');
         let manualMsg = 'Installation prompt not ready yet. ';
-        if (isAndroid) {
-          manualMsg += 'On Android: Open the browser menu (3 dots) > "Add to Home screen" or "Install app". ';
-        }
+        manualMsg += 'On Android: Open the browser menu (3 dots) > "Add to Home screen" or "Install app". ';
         manualMsg += 'Refresh the page and try again, or check if you\'re on HTTPS.';
         showMessage(manualMsg, 'info');
       }
     });
-
     setTimeout(() => {
       installButton.disabled = false;
-      console.log('Install button enabled for manual trigger');
+      console.log('Install button enabled');
     }, 2000);
   } else {
     console.error('Install button not found in DOM');
@@ -67,7 +60,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   console.log('beforeinstallprompt fired - prompt available');
   e.preventDefault();
   deferredPrompt = e;
-  const installButton = document.getElementById('install-button');
+  const installButton = document.getElementById('install-app');
   if (installButton) {
     installButton.disabled = false;
   }
@@ -80,7 +73,7 @@ window.addEventListener('appinstalled', () => {
 
 function checkOnlineStatus() {
   if (!navigator.onLine) {
-    showMessage('You are offline. Please upload a JSON file to view or edit data.', 'info');
+    showMessage('Offline!', 'info');
   }
 }
 
