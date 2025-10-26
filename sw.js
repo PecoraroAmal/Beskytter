@@ -1,4 +1,3 @@
-// sw.js
 const CACHE_NAME = 'beskytter-cache-v1';
 const urlsToCache = [
   '/Beskytter/',
@@ -8,6 +7,8 @@ const urlsToCache = [
   '/Beskytter/cookie-policy.html',
   '/Beskytter/info.html',
   '/Beskytter/informazioni.html',
+  '/Beskytter/download.html',
+  '/Beskytter/scarica.html',
   '/Beskytter/css/style.css',
   '/Beskytter/css/policy.css',
   '/Beskytter/js/crypto.js',
@@ -47,7 +48,10 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => response || fetch(event.request))
-      .catch(() => caches.match('/Beskytter/index.html'))
+      .catch(error => {
+        console.error('Fetch failed:', error);
+        return caches.match('/Beskytter/index.html');
+      })
   );
 });
 

@@ -1,24 +1,25 @@
-// app.js
 let deferredPrompt;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    console.log('Attempting to register Service Worker');
+    console.log('Attempting to register Service Worker at /Beskytter/sw.js');
     navigator.serviceWorker.register('/Beskytter/sw.js', { scope: '/Beskytter/' })
       .then(registration => {
-        console.log('Service Worker registered:', registration);
+        console.log('Service Worker registered successfully:', registration);
         registration.update();
       })
       .catch(error => {
         console.error('Service Worker registration failed:', error);
       });
-    console.log('Fetching manifest.json');
+    console.log('Fetching manifest at /Beskytter/manifest.json');
     fetch('/Beskytter/manifest.json')
       .then(response => {
-        if (!response.ok) throw new Error('Unable to load manifest.json');
+        if (!response.ok) throw new Error(`Failed to load manifest.json: ${response.status} ${response.statusText}`);
         console.log('Manifest loaded successfully');
+        return response.json();
       })
-      .catch(error => console.error('Error loading manifest:', error));
+      .then(data => console.log('Manifest content:', data))
+      .catch(error => console.error('Error fetching manifest:', error));
   });
 }
 
