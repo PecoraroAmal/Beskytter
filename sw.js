@@ -1,3 +1,4 @@
+// sw.js
 const CACHE_NAME = 'beskytter-cache-v1';
 const urlsToCache = [
   '/Beskytter/',
@@ -20,24 +21,29 @@ const urlsToCache = [
   '/Beskytter/assets/favicon-96x96.png',
   '/Beskytter/assets/favicon.ico',
   '/Beskytter/assets/favicon.svg',
-  '/Beskytter/assets/site.webmanifest',
   '/Beskytter/assets/web-app-manifest-192x192.png',
   '/Beskytter/assets/web-app-manifest-512x512.png',
+  '/Beskytter/manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2'
 ];
 
 self.addEventListener('install', event => {
+  console.log('Service Worker: Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .catch(error => console.error('Cache failed:', error))
+      .then(cache => {
+        console.log('Service Worker: Caching files');
+        return cache.addAll(urlsToCache);
+      })
+      .catch(error => console.error('Service Worker: Cache failed:', error))
   );
   self.skipWaiting();
 });
 
 self.addEventListener('fetch', event => {
+  console.log('Service Worker: Fetching', event.request.url);
   event.respondWith(
     caches.match(event.request)
       .then(response => response || fetch(event.request))
@@ -46,12 +52,14 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
+  console.log('Service Worker: Activating...');
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (!cacheWhitelist.includes(cacheName)) {
+            console.log('Service Worker: Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })

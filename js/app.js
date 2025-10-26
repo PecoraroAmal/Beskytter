@@ -1,71 +1,82 @@
+// app.js
 let deferredPrompt;
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    console.log('Attempting to register Service Worker');
     navigator.serviceWorker.register('/Beskytter/sw.js', { scope: '/Beskytter/' })
       .then(registration => {
-        console.log('Service Worker registrato:', registration);
+        console.log('Service Worker registered:', registration);
         registration.update();
       })
       .catch(error => {
-        console.error('Registrazione Service Worker fallita:', error);
+        console.error('Service Worker registration failed:', error);
       });
+    console.log('Fetching manifest.json');
     fetch('/Beskytter/manifest.json')
       .then(response => {
-        if (!response.ok) throw new Error('Impossibile caricare manifest.json');
-        console.log('Manifest caricato con successo');
+        if (!response.ok) throw new Error('Unable to load manifest.json');
+        console.log('Manifest loaded successfully');
       })
-      .catch(error => console.error('Errore caricamento manifest:', error));
+      .catch(error => console.error('Error loading manifest:', error));
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const installButtons = ['install-pc', 'install-android'].map(id => document.getElementById(id));
-  installButtons.forEach(button => {
-    if (button) {
-      button.disabled = true;
-      button.addEventListener('click', () => {
-        console.log('Pulsante di installazione cliccato, userAgent:', navigator.userAgent);
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream) {
-          showMessage('Per installare Beskytter™, tocca il pulsante Condividi e seleziona "Aggiungi alla schermata Home".', 'info');
-        } else if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            console.log('Esito prompt:', choiceResult.outcome);
-            deferredPrompt = null;
-          });
-        } else {
-          console.warn('Prompt di installazione non disponibile');
-          showMessage('L\'installazione non è disponibile al momento.', 'info');
-        }
-      });
-    } else {
-      console.error('Pulsante di installazione non trovato nel DOM');
-    }
-  });
+  const installButton = document.getElementById('install-app');
+  if (installButton) {
+    console.log('Install button found in DOM');
+    installButton.disabled = true;
+    installButton.addEventListener('click', () => {
+      console.log('Install button clicked, userAgent:', navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        showMessage('To install Beskytter™, follow the iOS instructions below.', 'info');
+      } else if (deferredPrompt) {
+        console.log('Showing install prompt');
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          console.log('Prompt outcome:', choiceResult.outcome);
+          if (choiceResult.outcome === 'accepted') {
+            showMessage('Beskytter™ installed successfully!', 'success');
+          } else {
+            showMessage('Installation cancelled.', 'info');
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        console.warn('Install prompt not available');
+        showMessage('Installation prompt not available. Ensure you are using a supported browser (e.g., Chrome, Edge, Samsung Internet) on HTTPS. On Android: Open the browser menu (3 dots) > "Add to Home screen" or "Install app". Refresh the page and try again.', 'info');
+      }
+    });
+    setTimeout(() => {
+      installButton.disabled = false;
+      console.log('Install button enabled');
+    }, 2000);
+  } else {
+    console.error('Install button not found in DOM');
+  }
 });
 
 window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('beforeinstallprompt fired:', e);
   e.preventDefault();
   deferredPrompt = e;
-  const installButtons = ['install-pc', 'install-android'].map(id => document.getElementById(id));
-  installButtons.forEach(button => {
-    if (button) {
-      button.disabled = false;
-      console.log('beforeinstallprompt attivato');
-    } else {
-      console.error('Pulsante di installazione non trovato durante beforeinstallprompt');
-    }
-  });
+  const installButton = document.getElementById('install-app');
+  if (installButton) {
+    console.log('Enabling install button due to beforeinstallprompt');
+    installButton.disabled = false;
+  }
 });
 
 window.addEventListener('appinstalled', () => {
-  console.log('PWA installata');
+  console.log('PWA installed');
+  showMessage('Beskytter™ installed and ready!', 'success');
 });
 
 function checkOnlineStatus() {
   if (!navigator.onLine) {
-    showMessage('Offline!', 'info');
+    showMessage('Offline! Some features may be unavailable.', 'info');
   }
 }
 
