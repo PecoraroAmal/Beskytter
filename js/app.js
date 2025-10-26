@@ -4,68 +4,64 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/Beskytter/sw.js', { scope: '/Beskytter/' })
       .then(registration => {
-        console.log('Service Worker registrato:', registration);
+        console.log('Service Worker registered:', registration);
         registration.update();
       })
       .catch(error => {
-        console.error('Registrazione Service Worker fallita:', error);
+        console.error('Service Worker registration failed:', error);
       });
     fetch('/Beskytter/manifest.json')
       .then(response => {
-        if (!response.ok) throw new Error('Impossibile caricare manifest.json');
-        console.log('Manifest caricato con successo');
+        if (!response.ok) throw new Error('Failed to load manifest.json');
+        console.log('Manifest loaded successfully');
       })
-      .catch(error => console.error('Errore caricamento manifest:', error));
+      .catch(error => console.error('Manifest load error:', error));
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const installButtons = ['install-pc', 'install-android'].map(id => document.getElementById(id));
-  installButtons.forEach(button => {
-    if (button) {
-      button.disabled = true;
-      button.addEventListener('click', () => {
-        console.log('Pulsante di installazione cliccato, userAgent:', navigator.userAgent);
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream) {
-          showMessage('Per installare Beskytter™, tocca il pulsante Condividi e seleziona "Aggiungi alla schermata Home".', 'info');
-        } else if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            console.log('Esito prompt:', choiceResult.outcome);
-            deferredPrompt = null;
-          });
-        } else {
-          console.warn('Prompt di installazione non disponibile');
-          showMessage('L\'installazione non è disponibile al momento.', 'info');
-        }
-      });
-    } else {
-      console.error('Pulsante di installazione non trovato nel DOM');
-    }
-  });
+  const installButton = document.getElementById('install-button');
+  if (installButton) {
+    installButton.disabled = true;
+    installButton.addEventListener('click', () => {
+      console.log('Install button clicked, userAgent:', navigator.userAgent);
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.MSStream) {
+        showMessage('To install Beskytter™, tap the Share button and select "Add to Home Screen".', 'info');
+      } else if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          console.log('Prompt outcome:', choiceResult.outcome);
+          deferredPrompt = null;
+        });
+      } else {
+        console.warn('Install prompt not available');
+        showMessage('Installation is not available at this moment.', 'info');
+      }
+    });
+  } else {
+    console.error('Install button not found in DOM');
+  }
 });
 
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  const installButtons = ['install-pc', 'install-android'].map(id => document.getElementById(id));
-  installButtons.forEach(button => {
-    if (button) {
-      button.disabled = false;
-      console.log('beforeinstallprompt attivato');
-    } else {
-      console.error('Pulsante di installazione non trovato durante beforeinstallprompt');
-    }
-  });
+  const installButton = document.getElementById('install-button');
+  if (installButton) {
+    installButton.disabled = false;
+    console.log('beforeinstallprompt fired');
+  } else {
+    console.error('Install button not found during beforeinstallprompt');
+  }
 });
 
 window.addEventListener('appinstalled', () => {
-  console.log('PWA installata');
+  console.log('PWA installed');
 });
 
 function checkOnlineStatus() {
   if (!navigator.onLine) {
-    showMessage('Offline!', 'info');
+    showMessage('You are offline. Please upload a JSON file to view or edit data.', 'info');
   }
 }
 
