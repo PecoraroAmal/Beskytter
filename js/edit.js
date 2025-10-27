@@ -809,13 +809,13 @@ function copyToClipboard(text, type) {
 // Add password
 function addPassword() {
     const newPassword = {
-        id: generateUniqueId(),
         platform: '-',
         username: '',
         password: generateRandomPassword(),
+        notes: '',
         url: '',
         category: '',
-        notes: ''
+        id: generateUniqueId()
     };
     loadedData.passwords.push(newPassword);
     sortData();
@@ -828,14 +828,14 @@ function addPassword() {
 function addCard() {
     if (!loadedData.cards) loadedData.cards = [];
     const newCard = {
-        id: generateUniqueId(),
-        issuer: 'New Issuer',
+        issuer: '-',
         pan: '',
         expiryDate: '',
         cvv: '',
         pin: '',
         notes: '',
-        network: ''
+        network: '',
+        id: generateUniqueId()
     };
     loadedData.cards.push(newCard);
     sortData();
@@ -847,14 +847,14 @@ function addCard() {
 // Add wallet
 function addWallet() {
     const newWallet = {
-        id: generateUniqueId(),
-        wallet: 'New Wallet',
+        wallet: '-',
         username: '',
         password: generateRandomPassword(),
         key: '',
         address: '',
+        notes: '',
         type: '',
-        notes: ''
+        id: generateUniqueId(),
     };
     loadedData.wallets.push(newWallet);
     sortData();
