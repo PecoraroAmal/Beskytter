@@ -85,24 +85,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Handles the upload of the selected file
 function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    const files = event.target?.files || event.dataTransfer?.files;
+    const file = files?.[0];
 
-    if (!file.name.endsWith('.json')) {
-        showMessage('Error: select a valid JSON file', 'error');
+    if (!file) {
+        showMessage('No file selected', 'error');
+        return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+        showMessage('File too large (maximum 50 MB)', 'error');
+        if (event.target) event.target.value = '';
+        return;
+    }
+
+    if (!file.name.toLowerCase().endsWith('.json')) {
+        showMessage('Error: please select a valid .json file', 'error');
+        if (event.target) event.target.value = '';
         return;
     }
 
     uploadedFileName = file.name;
     const reader = new FileReader();
-    reader.onload = e => {
-        uploadedFile = e.target.result;
-        const fileNameElement = document.querySelector('.file-name');
-        if (fileNameElement) {
-            fileNameElement.textContent = uploadedFileName;
-        }
-        showMessage('File uploaded. Press "Open File" to view it.', 'info');
+
+    reader.onerror = () => {
+        showMessage('Error reading the file', 'error');
+        uploadedFile = null;
+        uploadedFileName = null;
+        if (event.target) event.target.value = '';
     };
+
+    reader.onload = (e) => {
+        try {
+            uploadedFile = e.target.result;
+
+            const fileNameElement = document.querySelector('.file-name');
+            if (fileNameElement) {
+                fileNameElement.textContent = uploadedFileName;
+            }
+
+            showMessage('File uploaded successfully. Click "Open File" to continue.', 'info');
+        } catch (err) {
+            showMessage('Error processing the file', 'error');
+            uploadedFile = null;
+            uploadedFileName = null;
+            if (event.target) event.target.value = '';
+        }
+    };
+
+    // Leggi come testo
     reader.readAsText(file);
 }
 
@@ -509,10 +540,49 @@ function toggleVisibility(button) {
 
 // Copies text to clipboard
 function copyToClipboard(text, type) {
-    if (text === '-') return;
-    navigator.clipboard.writeText(text)
-        .then(() => showMessage(`${type} copied to clipboard!`, 'success'))
-        .catch(() => showMessage('Error during copying', 'error'));
+    if (!text || text === '-') return;
+
+    const success = () => {
+        showMessage(`${type} copied to clipboard!`, 'success');
+        setTimeout(() => {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText('').catch(() => {});
+            }
+        }, 15000);
+    };
+
+    const error = () => showMessage('Copy failed', 'error');
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+            .then(success)
+            .catch(() => fallbackCopy(text, success, error));
+    } else {
+        fallbackCopy(text, success, error);
+    }
+}
+
+function fallbackCopy(text, onSuccess, onError) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+        const result = document.execCommand('copy');
+        if (result) {
+            onSuccess();
+        } else {
+            onError();
+        }
+    } catch (err) {
+        onError();
+    }
+
+    document.body.removeChild(textarea);
 }
 
 // Filters data based on search inputs and filters

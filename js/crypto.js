@@ -92,14 +92,3 @@ function base64ToArrayBuffer(base64) {
     }
     return bytes;
 }
-
-// Validate JSON structure
-function validateJSONStructure(data) {
-    return data &&
-           Array.isArray(data.passwords) &&
-           Array.isArray(data.wallets) &&
-           (!data.cards || Array.isArray(data.cards)) &&
-           data.passwords.every(p => p.platform && p.username && p.password) &&
-           data.wallets.every(w => w.wallet && w.password) &&
-           (!data.cards || data.cards.every(c => c.issuer && c.pan && c.expiryDate && c.cvv && c.pin));
-}
