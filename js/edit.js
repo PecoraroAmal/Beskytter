@@ -809,26 +809,10 @@ function toggleVisibility(button) {
 
 // Copy to clipboard
 function copyToClipboard(text, type) {
-    if (!text || text === '-') return;
-
-    const success = () => {
-        showMessage(`${type} copied to clipboard!`, 'success');
-        setTimeout(() => {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText('').catch(() => {});
-            }
-        }, 15000);
-    };
-
-    const error = () => showMessage('Copy failed', 'error');
-
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text)
-            .then(success)
-            .catch(() => fallbackCopy(text, success, error));
-    } else {
-        fallbackCopy(text, success, error);
-    }
+    if (text === '-') return;
+    navigator.clipboard.writeText(text)
+        .then(() => showMessage(`${type} copied to clipboard!`, 'success'))
+        .catch(() => showMessage('Error during copying', 'error'));
 }
 
 function fallbackCopy(text, onSuccess, onError) {
