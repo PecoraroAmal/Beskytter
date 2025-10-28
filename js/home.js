@@ -93,8 +93,8 @@ function handleFileUpload(event) {
         return;
     }
 
-    if (file.size > 50 * 1024 * 1024) {
-        showMessage('File too large (maximum 50 MB)', 'error');
+    if (file.size > 500* 1024) {
+        showMessage('File too large (max 0.5 MB). Keep under ~3,000 passwords.', 'error');
         if (event.target) event.target.value = '';
         return;
     }
