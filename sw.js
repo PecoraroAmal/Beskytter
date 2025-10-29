@@ -1,21 +1,21 @@
-const CACHE_NAME = 'beskytter-cache-v1';
+const CACHE_NAME = 'beskytter-cache-v3.8';
 const urlsToCache = [
-  '/Beskytter/index.html?v=3.7',
-  '/Beskytter/edit.html?v=3.7',
-  '/Beskytter/privacy-policy.html?v=3.7',
-  '/Beskytter/cookie-policy.html?v=3.7',
-  '/Beskytter/info.html?v=3.7',
-  '/Beskytter/informazioni.html?v=3.7',
-  '/Beskytter/download.html?v=3.7',
-  '/Beskytter/scarica.html?v=3.7',
-  '/Beskytter/css/style.css?v=3.7',
-  '/Beskytter/css/policy.css?v=3.7',
-  '/Beskytter/js/crypto.js?v=3.7',
-  '/Beskytter/js/edit.js?v=3.7',
-  '/Beskytter/js/home.js?v=3.7',
-  '/Beskytter/js/info.js?v=3.7',
-  '/Beskytter/js/app.js?v=3.7',
-  '/Beskytter/js/utils.js?v=3.7',
+  '/Beskytter/index.html?v=3.8',
+  '/Beskytter/edit.html?v=3.8',
+  '/Beskytter/privacy-policy.html?v=3.8',
+  '/Beskytter/cookie-policy.html?v=3.8',
+  '/Beskytter/info.html?v=3.8',
+  '/Beskytter/informazioni.html?v=3.8',
+  '/Beskytter/download.html?v=3.8',
+  '/Beskytter/scarica.html?v=3.8',
+  '/Beskytter/css/style.css?v=3.8',
+  '/Beskytter/css/policy.css?v=3.8',
+  '/Beskytter/js/crypto.js?v=3.8',
+  '/Beskytter/js/edit.js?v=3.8',
+  '/Beskytter/js/home.js?v=3.8',
+  '/Beskytter/js/info.js?v=3.8',
+  '/Beskytter/js/app.js?v=3.8',
+  '/Beskytter/js/utils.js?v=3.8',
   '/Beskytter/assets/apple-touch-icon.png',
   '/Beskytter/assets/beskytter-logo.png',
   '/Beskytter/assets/favicon-96x96.png',
@@ -81,11 +81,11 @@ self.addEventListener('fetch', event => {
           return fetchAndUpdateCache(event.request);
         }
         // If offline and not in cache, return fallback
-        return caches.match('/Beskytter/index.html?v=3.7');
+        return caches.match('/Beskytter/index.html?v=3.8');
       })
       .catch(error => {
         console.error('Fetch failed:', error);
-        return caches.match('/Beskytter/index.html?v=3.7');
+        return caches.match('/Beskytter/index.html?v=3.8');
       })
   );
 });
