@@ -93,6 +93,11 @@ body {
     border-radius: var(--border-radius);
     transition: background-color 0.3s;
 }
+
+.nav-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
 .nav-link-language:hover {
     background-color: black;
     color: white;
@@ -103,16 +108,18 @@ body {
     transition: background-color 0.3s;
 }
 
-.nav-link:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
 .nav-link.active {
     background-color: var(--primary-color);
     color: white;
 }
-
+.nav-link-language.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+.languages{
+    margin-top: 1%;
+    text-align: center;
+}
 /* Contenuto principale */
 .main-content {
     padding: 40px 0;
@@ -529,7 +536,7 @@ h2 {
     font-size: 24px;
 }
 
-/* GitHub button in info.html?v=3.8 footer */
+/* GitHub button in info.html?v=3.9 footer */
 .btn.btn-primary i.fab.fa-github {
     margin-right: 10px;
     font-size: 24px;
@@ -1131,7 +1138,7 @@ h2 {
 }
 
 /* Media queries */
-@media (min-width: 769px) {
+@media (max-width: 768px) {    
     .field-container {
         gap: 12px;
     }
@@ -1139,9 +1146,6 @@ h2 {
     .field-label {
         width: 120px;
     }
-}
-
-@media (max-width: 768px) {
     .container, .nav-container {
         padding: 0 12px;
     }
@@ -1220,6 +1224,10 @@ h2 {
     .workflow-item::after {
         display: none;
     }
+    .languages{
+        margin-top: 3%;
+        text-align: center;
+    }
 }
 
 @media (max-width: 600px) {
@@ -1245,6 +1253,10 @@ h2 {
     .btn.btn-primary i.fab.fa-github {
         font-size: 20px;
     }
+    .languages{
+        margin-top: 3%;
+        text-align: center;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1255,5 +1267,9 @@ h2 {
 
     .field-container {
         gap: 4px;
+    }
+    .languages{
+        margin-top: 3%;
+        text-align: center;
     }
 }
