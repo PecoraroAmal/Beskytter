@@ -1,7 +1,7 @@
 {
   "name": "Beskytter™",
   "short_name": "Beskytter",
-  "start_url": "/Beskytter/index.html?v=3.10",
+  "start_url": "/Beskytter/index.html?v=3.12",
   "display": "standalone",
   "background_color": "#f8f9fa",
   "theme_color": "#339966",
