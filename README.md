@@ -7,7 +7,7 @@ filename: README.md
 This project is **NO LONGER** under the GNU Affero General Public Licence v3.0 (AGPL-3.0).  
 It is now under the **custom licence of Amal Pecoraro**.  
 **IT IS FORBIDDEN** to use the name "Beskytter™", logos, images, or graphical elements in derivative products.  
-See the files `LICENSE` (English) and `LICENZA` (Italian) for full terms.
+See the files `LICENCE` (English) and `LICENZA` (Italian) for full terms.
 
 ---
 
@@ -42,6 +42,6 @@ See the files `LICENSE` (English) and `LICENZA` (Italian) for full terms.
 
 ## Licence
 This project is released under the **custom licence of Amal Pecoraro**.  
-See the files [`LICENSE`](LICENSE) (English) and [`LICENZA`](LICENZA) (Italian) for full details.
+See the files [`LICENCE`](LICENCE) (English) and [`LICENZA`](LICENZA) (Italian) for full details.
 
 > **Note**: By downloading or using this software, you fully accept the terms of the licence.
