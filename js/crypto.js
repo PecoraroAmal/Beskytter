@@ -53,9 +53,9 @@ async function decryptData(encryptedBase64, password) {
     try {
         data = base64UrlToUint8(encryptedBase64);
     } catch (e) {
-        throw new Error("Base64 non valido");
+        throw new Error("Invalid Base64");
     }
-    if (data.length < 30) throw new Error("Dati corrotti");
+    if (data.length < 30) throw new Error("Corrupted data");
     const version = data[0];
     if (version === FORMAT_VERSION) {
         const salt = data.slice(1, 1 + SALT_LENGTH_NEW);
@@ -68,7 +68,7 @@ async function decryptData(encryptedBase64, password) {
             );
             return JSON.parse(new TextDecoder().decode(decrypted));
         } catch (e) {
-            throw new Error("Password errata o dati corrotti");
+            throw new Error("Incorrect password or corrupted data");
         }
     }
     const compatibleData = (version === OLD_FORMAT_VERSION) ? data.slice(1) : data;
@@ -82,7 +82,7 @@ async function decryptData(encryptedBase64, password) {
         );
         return JSON.parse(new TextDecoder().decode(decrypted));
     } catch (e) {
-        throw new Error("Password errata o dati vecchi corrotti");
+        throw new Error("Incorrect password or corrupted data");
     }
 }
 
